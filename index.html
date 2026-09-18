@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts estilo Retro / Moderno -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Favicon dinámico Campana Amarilla Brillante -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 448 512%22><path fill=%22%23fbbf24%22 d=%22M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8H393.8c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V200c0-75.8-55.5-138.6-128-150.1V32c0-17.3-14.3-32-32-32zm0 96c44.2 0 80 35.8 80 80v44.2c0 36 11.2 71 31.8 100.2H112.2c20.6-29.2 31.8-64.2 31.8-100.2V176c0-44.2 35.8-80 80-80zm48 352H176c0 26.5 21.5 48 48 48s48-21.5 48-48z%22/></svg>">
+    <!-- Favicon de Campana Limpio y Compatible -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path fill='%23fbbf24' d='M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8H393.8c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V200c0-75.8-55.5-138.6-128-150.1V32c0-17.3-14.3-32-32-32zm0 96c44.2 0 80 35.8 80 80v44.2c0 36 11.2 71 31.8 100.2H112.2c20.6-29.2 31.8-64.2 31.8-100.2V176c0-44.2 35.8-80 80-80zm48 352H176c0 26.5 21.5 48 48 48s48-21.5 48-48z'/></svg>">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .retro-clock { font-family: 'Share Tech Mono', monospace; }
@@ -449,23 +449,28 @@
             } catch(e) {}
         };
 
-        // Sonido de campanita sutil para nuevos mensajes de chat
+        // Sonido de campanita sutil y garantizada mediante Web Audio API
         function playChatBellSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (ctx.state === 'suspended') {
+                    ctx.resume();
+                }
                 const now = ctx.currentTime;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(659.25, now); // Nota Mi5 (campanita)
-                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                osc.frequency.setValueAtTime(587.33, now); // Re5
+                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.3); // Re6
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start(now);
-                osc.stop(now + 0.8);
-            } catch(e) {}
+                osc.stop(now + 0.9);
+            } catch(e) {
+                console.log("Audio contextual error:", e);
+            }
         }
 
         function playBeep(ctx, startTime) {
@@ -600,7 +605,7 @@
                     if(data.usersPermissions) window.appState.usersPermissions = data.usersPermissions;
                     if(data.chatMessages) {
                         window.appState.chatMessages = data.chatMessages;
-                        // Si hay mensajes nuevos sincronizados de otro usuario, activar campanita
+                        // Si hay mensajes nuevos y son de otro usuario, activar campanita de chat
                         if(window.appState.chatMessages.length > oldChatLength && oldChatLength > 0) {
                             const lastMsg = window.appState.chatMessages[window.appState.chatMessages.length - 1];
                             if(window.currentUser && lastMsg.sender !== window.currentUser.email) {
@@ -823,13 +828,14 @@
         window.closeSettingsModal = () => document.getElementById('settings-modal').classList.add('hidden');
         window.openTimersModal = () => document.getElementById('timers-modal').classList.remove('hidden');
         window.closeTimersModal = () => document.getElementById('timers-modal').classList.add('hidden');
+        
         window.openChatModal = () => {
             document.getElementById('chat-modal').classList.remove('hidden');
             document.getElementById('chat-badge').classList.add('hidden');
         };
         window.closeChatModal = () => document.getElementById('chat-modal').classList.add('hidden');
 
-        // Función disparadora de alerta visual y sonora para el chat
+        // Disparador de alerta visual y sonora del chat
         function triggerChatAlertUI() {
             playChatBellSound();
             const badge = document.getElementById('chat-badge');
