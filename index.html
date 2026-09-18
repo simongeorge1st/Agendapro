@@ -117,7 +117,7 @@
 
             <!-- BOTONERA DE ACCIÓN SUPERIOR -->
             <div class="flex items-center gap-2">
-                <button onclick="openChatModal()" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2 relative">
+                <button id="btn-chat" onclick="openChatModal()" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2 relative">
                     <i class="fa-solid fa-comments"></i> Chat <span id="chat-badge" class="hidden w-2 h-2 rounded-full bg-red-500 absolute top-1 right-1"></span>
                 </button>
                 <button id="btn-export" onclick="exportMonthAlarms()" class="bg-emerald-600/25 hover:bg-emerald-600/35 border border-emerald-500/30 text-emerald-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2">
@@ -449,6 +449,25 @@
             } catch(e) {}
         };
 
+        // Sonido de campanita sutil para nuevos mensajes de chat
+        function playChatBellSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, now); // Nota Mi5 (campanita)
+                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.25);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.8);
+            } catch(e) {}
+        }
+
         function playBeep(ctx, startTime) {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
@@ -574,10 +593,21 @@
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    let oldChatLength = window.appState.chatMessages.length;
+                    
                     if(data.events) window.appState.events = data.events;
                     if(data.sectors) window.appState.sectors = data.sectors;
                     if(data.usersPermissions) window.appState.usersPermissions = data.usersPermissions;
-                    if(data.chatMessages) window.appState.chatMessages = data.chatMessages;
+                    if(data.chatMessages) {
+                        window.appState.chatMessages = data.chatMessages;
+                        // Si hay mensajes nuevos sincronizados de otro usuario, activar campanita
+                        if(window.appState.chatMessages.length > oldChatLength && oldChatLength > 0) {
+                            const lastMsg = window.appState.chatMessages[window.appState.chatMessages.length - 1];
+                            if(window.currentUser && lastMsg.sender !== window.currentUser.email) {
+                                triggerChatAlertUI();
+                            }
+                        }
+                    }
                     if(data.timers) window.appState.timers = data.timers;
                 } else {
                     saveGlobalData();
@@ -793,8 +823,23 @@
         window.closeSettingsModal = () => document.getElementById('settings-modal').classList.add('hidden');
         window.openTimersModal = () => document.getElementById('timers-modal').classList.remove('hidden');
         window.closeTimersModal = () => document.getElementById('timers-modal').classList.add('hidden');
-        window.openChatModal = () => document.getElementById('chat-modal').classList.remove('hidden');
+        window.openChatModal = () => {
+            document.getElementById('chat-modal').classList.remove('hidden');
+            document.getElementById('chat-badge').classList.add('hidden');
+        };
         window.closeChatModal = () => document.getElementById('chat-modal').classList.add('hidden');
+
+        // Función disparadora de alerta visual y sonora para el chat
+        function triggerChatAlertUI() {
+            playChatBellSound();
+            const badge = document.getElementById('chat-badge');
+            if(badge) badge.classList.remove('hidden');
+            const btnChat = document.getElementById('btn-chat');
+            if(btnChat) {
+                btnChat.classList.add('animate-bounce');
+                setTimeout(() => btnChat.classList.remove('animate-bounce'), 5000);
+            }
+        }
 
         window.sendChatMessage = function(e) {
             e.preventDefault();
