@@ -380,8 +380,8 @@
     <!-- SCRIPT FIREBASE Y APLICACIÓN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAZHIW3Y1PM73ot3rNXQJMNDqYEtI3ktRA",
@@ -413,7 +413,7 @@
             currentModalEventId: null
         };
 
-        const SUPER_ADMIN_EMAILS = ["depositodsj@gmail.com", "depositosdj@gmail.com"];
+        const SUPER_ADMIN_EMAILS = ["depositodsj@gmail.com", "depositosdj@gmail.com", "deportshowonline@gmail.com"];
 
         function playWindowsStartupChime() {
             try {
@@ -530,7 +530,6 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (err) {
-                // Si el usuario existe en permisos pero no en el Auth de Firebase (o error de clave), intentamos crearlo automáticamente si es Superadmin o dar aviso claro
                 alert("Error al iniciar sesión: " + err.message + "\n\nSugerencia: Si es una cuenta nueva, asegúrate de haberla creado en la pestaña 'Registrarse' o desde el panel de Superadministrador.");
             }
         };
@@ -541,7 +540,6 @@
             const pass = document.getElementById('reg-password').value;
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                // Asignar sector por defecto si no existe
                 if(!window.appState.usersPermissions[email]) {
                     window.appState.usersPermissions[email] = { sector: window.appState.sectors[0] || 'General', password: pass, export: true, timers: true };
                     saveGlobalData();
@@ -712,7 +710,6 @@
             const canTimers = document.getElementById('perm-timers').checked;
 
             try {
-                // Intentar crear el usuario en Firebase Auth
                 await createUserWithEmailAndPassword(auth, email, pass);
                 window.appState.usersPermissions[email] = { sector, password: pass, export: canExport, timers: canTimers };
                 saveGlobalData();
@@ -721,11 +718,10 @@
                 document.getElementById('new-user-email').value = '';
                 document.getElementById('new-user-pass').value = '';
             } catch(err) {
-                // Si el usuario ya existe en Auth, guardamos los permisos y avisamos
                 window.appState.usersPermissions[email] = { sector, password: pass, export: canExport, timers: canTimers };
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Credenciales guardadas para ${email}. (Nota: Si el correo ya existía en Auth, asegúrate de actualizar su clave con la opción de recuperación si da error al ingresar).`);
+                showToast(`Credenciales guardadas para ${email}.`);
             }
         };
 
@@ -741,7 +737,7 @@
                 window.appState.usersPermissions[email] = currentData;
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Contraseña actualizada para ${email}. La persona ya puede ingresar con esta nueva clave.`);
+                showToast(`Contraseña actualizada para ${email}.`);
             }
         };
 
