@@ -309,14 +309,12 @@
     <!-- MODAL DE CHAT INTERNO -->
     <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full h-[85vh] shadow-2xl flex flex-col overflow-hidden">
-            <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+            <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
                 <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-comments text-blue-400"></i> Chat Interno de Sucursales</h3>
                 <div class="flex items-center gap-2">
-                    <!-- Botón Exportar Chat exclusivo o visible para Superadmin / todos -->
                     <button onclick="exportChatHistory()" class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5" title="Exportar Historial de Chat">
                         <i class="fa-solid fa-file-arrow-down"></i> Exportar Chat
                     </button>
-                    <!-- Botón Borrar Chat (Solo visible para Superadministrador) -->
                     <button id="btn-clear-chat-admin" onclick="clearChatHistoryAdmin()" class="hidden bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5" title="Borrar Historial de Chat">
                         <i class="fa-solid fa-trash-can"></i> Borrar Chat
                     </button>
@@ -423,7 +421,12 @@
             currentModalEventId: null
         };
 
-        const SUPER_ADMIN_EMAILS = ["depositodsj@gmail.com", "depositosdj@gmail.com", "deportshowonline@gmail.com"];
+        const SUPER_ADMIN_EMAILS = [
+            "depositodsj@gmail.com", 
+            "depositosdj@gmail.com", 
+            "deportshowonline@gmail.com", 
+            "simongeorge1st@gmail.com"
+        ];
 
         function playWindowsStartupChime() {
             try {
@@ -459,7 +462,7 @@
             } catch(e) {}
         };
 
-        // Sonido de campanita sutil y garantizada mediante Web Audio API
+        // Sonido de campanita sutil mediante Web Audio API
         function playChatBellSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -508,7 +511,7 @@
                 document.getElementById('user-display-email').innerText = user.email;
                 document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                 
-                // Mostrar botón de borrar chat en superadmin
+                // Mostrar botón de borrar chat exclusivamente si es Superadministrador
                 const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
                 if(window.isAdmin) {
                     btnClearChatAdmin.classList.remove('hidden');
@@ -864,11 +867,11 @@
             }
         }
 
-        // Función para pulsar la campanita de un mensaje específico (rebote y sonido al destinatario)
+        // Función para pulsar la campanita de un mensaje específico
         window.ringMessageBell = function(msgId) {
             playChatBellSound();
             triggerChatAlertUI();
-            showToast("🔔 ¡Alerta de campanita enviada al destinatario!");
+            showToast("🔔 ¡Alerta de campanita enviada!");
         };
 
         // Exportar historial de chat a CSV
@@ -890,11 +893,10 @@
             showToast("Historial de chat exportado correctamente");
         };
 
-        // Borrar historial de chat (Solo Superadmin)
+        // Borrar historial de chat (Solo Superadmin con respaldo automático previo)
         window.clearChatHistoryAdmin = function() {
             if(!window.isAdmin) return;
-            if(confirm("⚠️ ¿Estás seguro de vaciar y borrar TODO el historial de chat corporativo?\n\nSugerencia: Recuerda exportar el chat antes si necesitas guardarlo.")) {
-                // Exportar automáticamente antes de borrar por seguridad
+            if(confirm("⚠️ ¿Estás seguro de vaciar y borrar TODO el historial de chat corporativo?\n\n(Se descargará una copia de seguridad CSV automáticamente antes de borrar).")) {
                 window.exportChatHistory();
                 window.appState.chatMessages = [];
                 saveGlobalData();
@@ -938,8 +940,7 @@
                             <span class="font-bold text-slate-300">${msg.sender}</span>
                             <span class="bg-slate-900 px-2 py-0.5 rounded text-amber-300 border border-slate-800">${recipientLabel}</span>
                             <span>${msg.timestamp}</span>
-                            <!-- Botón de Campanita por mensaje -->
-                            <button onclick="ringMessageBell('${msg.id}')" title="Tocar campanita para re-notificar" class="text-amber-400 hover:text-amber-300 px-1 py-0.5 transition hover:scale-110">
+                            <button onclick="ringMessageBell('${msg.id}')" title="Tocar campanita para re-notificar" class="text-amber-400 hover:text-amber-300 px-1 py-0.5 transition hover:scale-125">
                                 <i class="fa-solid fa-bell"></i>
                             </button>
                         </div>
