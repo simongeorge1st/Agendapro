@@ -272,9 +272,9 @@
                 <div id="sectors-list" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- Sección 2: Creación de Usuarios y Gestión de Contraseñas/Permisos -->
+            <!-- Sección 2: Creación de Usuarios, Asignación de Roles y Permisos -->
             <div id="admin-users-section" class="space-y-3 pt-4 border-t border-slate-800">
-                <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">2. Generar y Gestionar Credenciales de Sucursales</h4>
+                <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">2. Generar y Asignar Roles de Usuarios / Sucursales</h4>
                 <form onsubmit="createNewUserAccount(event)" class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -282,20 +282,27 @@
                             <input type="email" id="new-user-email" required class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="sucursal@deportshow.com">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-slate-400 mb-1">Contraseña (Otorgada / Nueva)</label>
+                            <label class="block text-[11px] text-slate-400 mb-1">Contraseña (Mín. 6 caracteres)</label>
                             <input type="text" id="new-user-pass" required minlength="6" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="Contraseña">
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-3 gap-3">
                         <div>
                             <label class="block text-[11px] text-slate-400 mb-1">Sucursal Asignada</label>
                             <select id="new-user-sector" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 text-amber-300 font-semibold"></select>
                         </div>
                         <div>
-                            <label class="block text-[11px] text-slate-400 mb-1">Permisos de Funciones</label>
-                            <div class="flex items-center gap-4 pt-2 text-xs">
-                                <label class="flex items-center gap-1.5"><input type="checkbox" id="perm-export" checked class="rounded bg-slate-900 border-slate-800 text-emerald-600"> Exportar</label>
-                                <label class="flex items-center gap-1.5"><input type="checkbox" id="perm-timers" checked class="rounded bg-slate-900 border-slate-800 text-emerald-600"> Relojes</label>
+                            <label class="block text-[11px] text-slate-400 mb-1">Rol de Usuario</label>
+                            <select id="new-user-role" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 text-blue-400 font-semibold">
+                                <option value="branch">🏢 Sucursal</option>
+                                <option value="admin">👑 Superadministrador</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 mb-1">Permisos</label>
+                            <div class="flex items-center gap-3 pt-2 text-[11px]">
+                                <label class="flex items-center gap-1"><input type="checkbox" id="perm-export" checked class="rounded bg-slate-900 text-emerald-600"> Exp</label>
+                                <label class="flex items-center gap-1"><input type="checkbox" id="perm-timers" checked class="rounded bg-slate-900 text-emerald-600"> Reloj</label>
                             </div>
                         </div>
                     </div>
@@ -462,7 +469,6 @@
             } catch(e) {}
         };
 
-        // Sonido de campanita sutil mediante Web Audio API
         function playChatBellSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -481,9 +487,7 @@
                 gain.connect(ctx.destination);
                 osc.start(now);
                 osc.stop(now + 0.9);
-            } catch(e) {
-                console.log("Audio contextual error:", e);
-            }
+            } catch(e) {}
         }
 
         function playBeep(ctx, startTime) {
@@ -504,14 +508,17 @@
             if (user) {
                 window.currentUser = user;
                 const emailLower = user.email.toLowerCase();
-                window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || Object.keys(window.appState.usersPermissions).length === 0;
+                
+                // Determinación estricta de Superadministrador (lista maestra o rol asignado explícitamente)
+                const userPerm = window.appState.usersPermissions[emailLower];
+                const isExplicitAdmin = userPerm && userPerm.role === 'admin';
+                window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || isExplicitAdmin;
                 
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('user-display-email').innerText = user.email;
                 document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                 
-                // Mostrar botón de borrar chat exclusivamente si es Superadministrador
                 const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
                 if(window.isAdmin) {
                     btnClearChatAdmin.classList.remove('hidden');
@@ -575,7 +582,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (err) {
-                alert("Error al iniciar sesión: " + err.message + "\n\nSugerencia: Si es una cuenta nueva, asegúrate de haberla creado en la pestaña 'Registrarse' o desde el panel de Superadministrador.");
+                alert("Error al iniciar sesión: " + err.message);
             }
         };
 
@@ -586,10 +593,11 @@
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
                 if(!window.appState.usersPermissions[email]) {
-                    window.appState.usersPermissions[email] = { sector: window.appState.sectors[0] || 'General', password: pass, export: true, timers: true };
+                    // Por defecto se registran estrictamente como sucursal
+                    window.appState.usersPermissions[email] = { sector: window.appState.sectors[0] || 'General', role: 'branch', password: pass, export: true, timers: true };
                     saveGlobalData();
                 }
-                showToast("Cuenta creada con éxito");
+                showToast("Cuenta de sucursal creada con éxito");
             } catch (err) {
                 alert("Error al registrar: " + err.message);
             }
@@ -597,16 +605,11 @@
 
         window.handleForgotPassword = async function() {
             const email = document.getElementById('login-email').value;
-            if(!email) {
-                alert("Ingresa tu correo electrónico primero.");
-                return;
-            }
+            if(!email) { alert("Ingresa tu correo electrónico primero."); return; }
             try {
                 await sendPasswordResetEmail(auth, email);
                 alert("Correo de recuperación enviado a " + email);
-            } catch(err) {
-                alert("Error: " + err.message);
-            }
+            } catch(err) { alert("Error: " + err.message); }
         };
 
         window.handleLogout = async function() {
@@ -641,7 +644,13 @@
                 renderCalendar();
                 renderChatMessages();
                 renderTimers();
-                if(window.currentUser) applyUserPermissions(window.currentUser.email);
+                if(window.currentUser) {
+                    const emailLower = window.currentUser.email.toLowerCase();
+                    const userPerm = window.appState.usersPermissions[emailLower];
+                    window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || (userPerm && userPerm.role === 'admin');
+                    document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
+                    applyUserPermissions(window.currentUser.email);
+                }
             }, (error) => {
                 const local = localStorage.getItem('enterprise_workspace_data');
                 if(local) {
@@ -720,20 +729,24 @@
 
             for(let [email, perm] of Object.entries(window.appState.usersPermissions)) {
                 const passVal = perm.password || '******';
+                const roleBadge = perm.role === 'admin' ? '<span class="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">Superadmin</span>' : '<span class="text-[9px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">Sucursal</span>';
+                
                 usersContainer.innerHTML += `
                     <div class="flex items-center justify-between bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-xs">
                         <div>
-                            <span class="font-bold text-slate-200">${email}</span>
-                            <span class="ml-2 text-[10px] bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">${perm.sector}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-200">${email}</span>
+                                ${roleBadge}
+                                <span class="text-[10px] bg-slate-900 text-slate-400 px-2 py-0.5 rounded">${perm.sector || 'General'}</span>
+                            </div>
                             <div class="text-[10px] text-amber-400 mt-0.5 flex items-center gap-1.5">
                                 Clave: <span id="pass-view-${email.replace(/[@.]/g, '_')}" class="font-mono">${passVal}</span>
                                 <button onclick="togglePasswordView('${email}')" class="text-slate-400 hover:text-amber-300" title="Ver / Ocultar Clave"><i id="eye-icon-${email.replace(/[@.]/g, '_')}" class="fa-solid fa-eye text-[10px]"></i></button>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-slate-400">Export: ${perm.export ? 'Sí' : 'No'} | Relojes: ${perm.timers ? 'Sí' : 'No'}</span>
-                            <button onclick="editUserAccount('${email}')" class="text-blue-400 hover:text-blue-300 ml-2" title="Editar credenciales"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteUserAccount('${email}')" class="text-red-400 hover:text-red-300 ml-1" title="Revocar acceso"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editUserAccount('${email}')" class="text-blue-400 hover:text-blue-300 px-2 py-1" title="Editar Rol y Credenciales"><i class="fa-solid fa-pen"></i> Editar</button>
+                            <button onclick="deleteUserAccount('${email}')" class="text-red-400 hover:text-red-300 px-2 py-1" title="Revocar acceso"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -748,7 +761,7 @@
             if(!perm) return;
 
             if(spanElem.innerText === '******') {
-                spanElem.innerText = perm.password || 'Sin clave guardada';
+                spanElem.innerText = perm.password || 'Sin clave';
                 iconElem.className = "fa-solid fa-eye-slash text-[10px]";
             } else {
                 spanElem.innerText = '******';
@@ -761,38 +774,37 @@
             const email = document.getElementById('new-user-email').value;
             const pass = document.getElementById('new-user-pass').value;
             const sector = document.getElementById('new-user-sector').value;
+            const role = document.getElementById('new-user-role').value;
             const canExport = document.getElementById('perm-export').checked;
             const canTimers = document.getElementById('perm-timers').checked;
 
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                window.appState.usersPermissions[email] = { sector, password: pass, export: canExport, timers: canTimers };
+                window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Usuario ${email} creado correctamente`);
+                showToast(`Usuario ${email} registrado correctamente como ${role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
                 document.getElementById('new-user-email').value = '';
                 document.getElementById('new-user-pass').value = '';
             } catch(err) {
-                window.appState.usersPermissions[email] = { sector, password: pass, export: canExport, timers: canTimers };
+                window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Credenciales guardadas para ${email}.`);
+                showToast(`Credenciales actualizadas para ${email}.`);
             }
         };
 
         window.editUserAccount = async function(email) {
             const currentData = window.appState.usersPermissions[email] || {};
-            const newPass = prompt(`Modificar contraseña para ${email}:\n(Asegúrate de que tenga al menos 6 caracteres)`, currentData.password || '');
-            if(newPass !== null && newPass.trim() !== '') {
-                if(newPass.length < 6) {
-                    alert("La contraseña debe tener al menos 6 caracteres por seguridad de Firebase.");
-                    return;
-                }
-                currentData.password = newPass;
+            const newRole = prompt(`Asignar rol para ${email}:\nEscribe exactamente 'admin' para Superadministrador o 'branch' para Sucursal:`, currentData.role || 'branch');
+            if(newRole !== null && (newRole === 'admin' || newRole === 'branch')) {
+                currentData.role = newRole;
                 window.appState.usersPermissions[email] = currentData;
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Contraseña actualizada para ${email}.`);
+                showToast(`Rol actualizado para ${email} a: ${newRole === 'admin' ? 'Superadministrador' : 'Sucursal'}`);
+            } else if(newRole !== null) {
+                alert("Rol inválido. Debe ser 'admin' o 'branch'.");
             }
         };
 
@@ -855,7 +867,6 @@
         };
         window.closeChatModal = () => document.getElementById('chat-modal').classList.add('hidden');
 
-        // Disparador de alerta visual y sonora del chat
         function triggerChatAlertUI() {
             playChatBellSound();
             const badge = document.getElementById('chat-badge');
@@ -867,14 +878,12 @@
             }
         }
 
-        // Función para pulsar la campanita de un mensaje específico
         window.ringMessageBell = function(msgId) {
             playChatBellSound();
             triggerChatAlertUI();
             showToast("🔔 ¡Alerta de campanita enviada!");
         };
 
-        // Exportar historial de chat a CSV
         window.exportChatHistory = function() {
             if(window.appState.chatMessages.length === 0) {
                 alert("No hay mensajes en el historial de chat para exportar.");
@@ -893,7 +902,6 @@
             showToast("Historial de chat exportado correctamente");
         };
 
-        // Borrar historial de chat (Solo Superadmin con respaldo automático previo)
         window.clearChatHistoryAdmin = function() {
             if(!window.isAdmin) return;
             if(confirm("⚠️ ¿Estás seguro de vaciar y borrar TODO el historial de chat corporativo?\n\n(Se descargará una copia de seguridad CSV automáticamente antes de borrar).")) {
