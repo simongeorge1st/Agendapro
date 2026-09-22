@@ -431,12 +431,8 @@
             currentModalEventId: null
         };
 
-        const SUPER_ADMIN_EMAILS = [
-            "depositodsj@gmail.com", 
-            "depositosdj@gmail.com", 
-            "deportshowonline@gmail.com", 
-            "simongeorge1st@gmail.com"
-        ];
+        // Único correo predeterminado estrictamente inicial para bootstrap de emergencia
+        const MASTER_ADMIN_EMAIL = "simongeorge1st@gmail.com";
 
         function playWindowsStartupChime() {
             try {
@@ -515,7 +511,7 @@
                 if(!window.appState.usersPermissions[emailLower]) {
                     window.appState.usersPermissions[emailLower] = {
                         sector: window.appState.sectors[0] || 'General',
-                        role: SUPER_ADMIN_EMAILS.includes(emailLower) ? 'admin' : 'branch',
+                        role: (emailLower === MASTER_ADMIN_EMAIL) ? 'admin' : 'branch',
                         password: '••••',
                         export: true,
                         timers: true
@@ -523,8 +519,8 @@
                 }
 
                 const userPerm = window.appState.usersPermissions[emailLower];
-                const isExplicitAdmin = userPerm && userPerm.role === 'admin';
-                window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || isExplicitAdmin;
+                // Evaluación estricta y directa del rol guardado en la base de datos o estado
+                window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL) || (userPerm && userPerm.role === 'admin');
                 
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
@@ -567,7 +563,8 @@
                 adminSectors.classList.add('hidden');
                 adminUsers.classList.add('hidden');
                 
-                const perms = window.appState.usersPermissions[email] || { export: true, timers: true };
+                const emailLower = email.toLowerCase();
+                const perms = window.appState.usersPermissions[emailLower] || { export: true, timers: true };
                 if(perms.export) btnExport.classList.remove('hidden'); else btnExport.classList.add('hidden');
                 if(perms.timers) btnTimers.classList.remove('hidden'); else btnTimers.classList.add('hidden');
             }
@@ -600,7 +597,7 @@
 
         window.handleRegister = async function(e) {
             e.preventDefault();
-            const email = document.getElementById('reg-email').value;
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const pass = document.getElementById('reg-password').value;
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
@@ -638,7 +635,6 @@
                     if(data.events) window.appState.events = data.events;
                     if(data.sectors) window.appState.sectors = data.sectors;
                     if(data.usersPermissions) {
-                        // Combinar con los existentes para no perder datos
                         window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions };
                     }
                     if(data.chatMessages) {
@@ -661,7 +657,7 @@
                 if(window.currentUser) {
                     const emailLower = window.currentUser.email.toLowerCase();
                     const userPerm = window.appState.usersPermissions[emailLower];
-                    window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || (userPerm && userPerm.role === 'admin');
+                    window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL) || (userPerm && userPerm.role === 'admin');
                     document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                     applyUserPermissions(window.currentUser.email);
                 }
@@ -743,7 +739,7 @@
 
             const userKeys = Object.keys(window.appState.usersPermissions);
             if(userKeys.length === 0) {
-                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay usuarios registrados en el sistema todavía. Utiliza el formulario de arriba para crear o registrar uno.</div>`;
+                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay usuarios registrados en el sistema todavía.</div>`;
             } else {
                 for(let [email, perm] of Object.entries(window.appState.usersPermissions)) {
                     const passVal = perm.password || '******';
@@ -803,10 +799,19 @@
             const currentPerm = window.appState.usersPermissions[email];
             if(!currentPerm) return;
             
+            // Alternar estrictamente rol
             currentPerm.role = currentPerm.role === 'admin' ? 'branch' : 'admin';
             window.appState.usersPermissions[email] = currentPerm;
             saveGlobalData();
             updateSectorsUI();
+
+            // Si el usuario actual es el mismo que está logueado, actualizar de inmediato su vista corporativa
+            if(window.currentUser && window.currentUser.email.toLowerCase() === email.toLowerCase()) {
+                window.isAdmin = (email.toLowerCase() === MASTER_ADMIN_EMAIL) || (currentPerm.role === 'admin');
+                document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
+                applyUserPermissions(window.currentUser.email);
+            }
+
             showToast(`Rol de ${email} cambiado a: ${currentPerm.role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
         };
 
@@ -839,6 +844,13 @@
                 window.appState.usersPermissions[email] = currentData;
                 saveGlobalData();
                 updateSectorsUI();
+
+                if(window.currentUser && window.currentUser.email.toLowerCase() === email.toLowerCase()) {
+                    window.isAdmin = (email.toLowerCase() === MASTER_ADMIN_EMAIL) || (newRole === 'admin');
+                    document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
+                    applyUserPermissions(window.currentUser.email);
+                }
+
                 showToast(`Rol de ${email} actualizado a: ${newRole === 'admin' ? 'Superadmin' : 'Sucursal'}`);
             } else if(newRole !== null) {
                 alert("Rol inválido. Debe ser 'branch' o 'admin'.");
