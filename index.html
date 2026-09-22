@@ -727,24 +727,35 @@
 
             for(let [email, perm] of Object.entries(window.appState.usersPermissions)) {
                 const passVal = perm.password || '******';
-                const roleBadge = perm.role === 'admin' ? '<span class="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">Superadmin</span>' : '<span class="text-[9px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">Sucursal</span>';
-                
+                const isUserAdmin = perm.role === 'admin';
+                const roleBadgeClass = isUserAdmin 
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' 
+                    : 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+                const roleLabel = isUserAdmin ? '👑 Superadmin' : '🏢 Sucursal';
+
                 usersContainer.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-xs">
-                        <div>
-                            <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-between bg-slate-950 border border-slate-800 px-3 py-2.5 rounded-lg text-xs gap-2">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2 flex-wrap">
                                 <span class="font-bold text-slate-200">${email}</span>
-                                ${roleBadge}
-                                <span class="text-[10px] bg-slate-900 text-slate-400 px-2 py-0.5 rounded">${perm.sector || 'General'}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded border ${roleBadgeClass} font-semibold">${roleLabel}</span>
+                                <span class="text-[10px] bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-slate-800">${perm.sector || 'General'}</span>
                             </div>
-                            <div class="text-[10px] text-amber-400 mt-0.5 flex items-center gap-1.5">
+                            <div class="text-[10px] text-amber-400 flex items-center gap-1.5">
                                 Clave: <span id="pass-view-${email.replace(/[@.]/g, '_')}" class="font-mono">${passVal}</span>
                                 <button onclick="togglePasswordView('${email}')" class="text-slate-400 hover:text-amber-300" title="Ver / Ocultar Clave"><i id="eye-icon-${email.replace(/[@.]/g, '_')}" class="fa-solid fa-eye text-[10px]"></i></button>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="editUserAccount('${email}')" class="text-blue-400 hover:text-blue-300 px-2 py-1" title="Editar Rol y Credenciales"><i class="fa-solid fa-pen"></i> Editar</button>
-                            <button onclick="deleteUserAccount('${email}')" class="text-red-400 hover:text-red-300 px-2 py-1" title="Revocar acceso"><i class="fa-solid fa-trash"></i></button>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="toggleUserRole('${email}')" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 px-2.5 py-1 rounded text-[11px] font-semibold transition" title="Cambiar entre Sucursal y Superadmin">
+                                <i class="fa-solid fa-user-gear"></i> Rol
+                            </button>
+                            <button onclick="editUserAccount('${email}')" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 px-2.5 py-1 rounded text-[11px] font-semibold transition" title="Editar sucursal o clave">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteUserAccount('${email}')" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2.5 py-1 rounded text-[11px] transition" title="Revocar acceso">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -765,6 +776,17 @@
                 spanElem.innerText = '******';
                 iconElem.className = "fa-solid fa-eye text-[10px]";
             }
+        };
+
+        window.toggleUserRole = function(email) {
+            const currentPerm = window.appState.usersPermissions[email];
+            if(!currentPerm) return;
+            
+            currentPerm.role = currentPerm.role === 'admin' ? 'branch' : 'admin';
+            window.appState.usersPermissions[email] = currentPerm;
+            saveGlobalData();
+            updateSectorsUI();
+            showToast(`Rol de ${email} cambiado a: ${currentPerm.role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
         };
 
         window.createNewUserAccount = async function(e) {
