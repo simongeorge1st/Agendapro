@@ -509,7 +509,6 @@
                 window.currentUser = user;
                 const emailLower = user.email.toLowerCase();
                 
-                // Determinación estricta de Superadministrador (lista maestra o rol asignado explícitamente)
                 const userPerm = window.appState.usersPermissions[emailLower];
                 const isExplicitAdmin = userPerm && userPerm.role === 'admin';
                 window.isAdmin = SUPER_ADMIN_EMAILS.includes(emailLower) || isExplicitAdmin;
@@ -593,7 +592,6 @@
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
                 if(!window.appState.usersPermissions[email]) {
-                    // Por defecto se registran estrictamente como sucursal
                     window.appState.usersPermissions[email] = { sector: window.appState.sectors[0] || 'General', role: 'branch', password: pass, export: true, timers: true };
                     saveGlobalData();
                 }
@@ -771,7 +769,7 @@
 
         window.createNewUserAccount = async function(e) {
             e.preventDefault();
-            const email = document.getElementById('new-user-email').value;
+            const email = document.getElementById('new-user-email').value.trim().toLowerCase();
             const pass = document.getElementById('new-user-pass').value;
             const sector = document.getElementById('new-user-sector').value;
             const role = document.getElementById('new-user-role').value;
@@ -780,31 +778,27 @@
 
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
-                saveGlobalData();
-                updateSectorsUI();
-                showToast(`Usuario ${email} registrado correctamente como ${role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
-                document.getElementById('new-user-email').value = '';
-                document.getElementById('new-user-pass').value = '';
-            } catch(err) {
-                window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
-                saveGlobalData();
-                updateSectorsUI();
-                showToast(`Credenciales actualizadas para ${email}.`);
-            }
+            } catch(err) {}
+
+            window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
+            saveGlobalData();
+            updateSectorsUI();
+            showToast(`Credenciales guardadas para ${email} (${role === 'admin' ? 'Superadmin' : 'Sucursal'})`);
+            document.getElementById('new-user-email').value = '';
+            document.getElementById('new-user-pass').value = '';
         };
 
         window.editUserAccount = async function(email) {
             const currentData = window.appState.usersPermissions[email] || {};
-            const newRole = prompt(`Asignar rol para ${email}:\nEscribe exactamente 'admin' para Superadministrador o 'branch' para Sucursal:`, currentData.role || 'branch');
+            const newRole = prompt(`Cambiar rol para ${email}:\nEscribe exactamente 'branch' para Sucursal o 'admin' para Superadministrador:`, currentData.role || 'branch');
             if(newRole !== null && (newRole === 'admin' || newRole === 'branch')) {
                 currentData.role = newRole;
                 window.appState.usersPermissions[email] = currentData;
                 saveGlobalData();
                 updateSectorsUI();
-                showToast(`Rol actualizado para ${email} a: ${newRole === 'admin' ? 'Superadministrador' : 'Sucursal'}`);
+                showToast(`Rol de ${email} actualizado a: ${newRole === 'admin' ? 'Superadmin' : 'Sucursal'}`);
             } else if(newRole !== null) {
-                alert("Rol inválido. Debe ser 'admin' o 'branch'.");
+                alert("Rol inválido. Debe ser 'branch' o 'admin'.");
             }
         };
 
