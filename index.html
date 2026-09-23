@@ -40,14 +40,14 @@
 
     <!-- PANTALLA DE AUTENTICACIÓN -->
     <div id="auth-screen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
             <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl"></div>
             
             <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold tracking-wider text-blue-400 flex items-center justify-center gap-2">
+                <h1 class="text-xl sm:text-2xl font-bold tracking-wider text-blue-400 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-bell text-amber-400 yellow-bell-glow"></i> AGENDA PRO <span class="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full font-normal">Depósito Central</span>
                 </h1>
-                <p class="text-sm text-slate-400 mt-1">Plataforma Corporativa Multiusuario</p>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">Plataforma Corporativa Multiusuario</p>
             </div>
 
             <!-- Tabs Login / Register -->
@@ -90,61 +90,63 @@
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-container" class="hidden flex flex-col min-h-screen">
         
-        <!-- HEADER SUPERIOR -->
-        <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg shadow-inner yellow-bell-glow">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold tracking-wide flex items-center gap-2">
-                        AGENDA PRO <span id="user-role-badge" class="text-[10px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-normal">Sucursal</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Usuario: <span id="user-display-email" class="text-emerald-400 font-medium">--</span></p>
+        <!-- HEADER SUPERIOR RESPONSIVE -->
+        <header class="bg-slate-900 border-b border-slate-800 px-3 sm:px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3 sticky top-0 z-30">
+            <div class="flex items-center justify-between w-full md:w-auto gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 text-base sm:text-lg shadow-inner yellow-bell-glow">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold tracking-wide flex items-center gap-2">
+                            AGENDA PRO <span id="user-role-badge" class="text-[9px] sm:text-[10px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-normal">Sucursal</span>
+                        </h1>
+                        <p class="text-[11px] sm:text-xs text-slate-400 truncate max-w-[200px] sm:max-w-none">Usuario: <span id="user-display-email" class="text-emerald-400 font-medium">--</span></p>
+                    </div>
                 </div>
             </div>
 
             <!-- WIDGET DE RELOJ -->
-            <div class="flex items-center gap-6 bg-slate-950/60 border border-slate-800 px-4 py-1.5 rounded-xl">
+            <div class="flex items-center justify-between w-full md:w-auto gap-4 bg-slate-950/60 border border-slate-800 px-3 sm:px-4 py-1.5 rounded-xl">
                 <div class="text-center">
-                    <div id="header-clock" class="retro-clock text-xl font-bold tracking-widest text-amber-400">00:00:00</div>
-                    <div id="header-date" class="text-[10px] text-slate-400 uppercase tracking-wider">--</div>
+                    <div id="header-clock" class="retro-clock text-lg sm:text-xl font-bold tracking-widest text-amber-400">00:00:00</div>
+                    <div id="header-date" class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider">--</div>
                 </div>
-                <button onclick="toggleClockType()" title="Minimizar vista" class="text-slate-400 hover:text-white transition text-sm">
+                <button onclick="toggleClockType()" title="Minimizar vista" class="text-slate-400 hover:text-white transition text-sm p-1">
                     <i id="clock-type-icon" class="fa-solid fa-clock"></i>
                 </button>
             </div>
 
             <!-- BOTONERA DE ACCIÓN SUPERIOR -->
-            <div class="flex items-center gap-2">
-                <button id="btn-chat" onclick="openChatModal()" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2 relative">
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 justify-start md:justify-end">
+                <button id="btn-chat" onclick="openChatModal()" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 relative whitespace-nowrap">
                     <i class="fa-solid fa-comments"></i> Chat <span id="chat-badge" class="hidden w-2 h-2 rounded-full bg-red-500 absolute top-1 right-1"></span>
                 </button>
-                <button id="btn-export" onclick="exportMonthAlarms()" class="bg-emerald-600/25 hover:bg-emerald-600/35 border border-emerald-500/30 text-emerald-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2">
+                <button id="btn-export" onclick="exportMonthAlarms()" class="bg-emerald-600/25 hover:bg-emerald-600/35 border border-emerald-500/30 text-emerald-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-file-arrow-down"></i> Exportar
                 </button>
-                <button id="btn-timers" onclick="openTimersModal()" class="bg-amber-600/25 hover:bg-amber-600/35 border border-amber-500/30 text-amber-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2">
+                <button id="btn-timers" onclick="openTimersModal()" class="bg-amber-600/25 hover:bg-amber-600/35 border border-amber-500/30 text-amber-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-stopwatch"></i> Relojes
                 </button>
-                <button id="btn-settings" onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-2 rounded-lg transition flex items-center gap-2">
+                <button id="btn-settings" onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-gear"></i> <span id="settings-btn-text">Unidades</span>
                 </button>
-                <button onclick="handleLogout()" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 text-xs font-semibold px-3 py-2 rounded-lg transition" title="Cerrar Sesión">
+                <button onclick="handleLogout()" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition whitespace-nowrap" title="Cerrar Sesión">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </header>
 
         <!-- CONTENIDO PRINCIPAL / CALENDARIO -->
-        <main class="flex-1 p-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <main class="flex-1 p-3 sm:p-4 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
             
             <!-- PANEL IZQUIERDO: FORMULARIO DE AVISOS -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
+            <div class="lg:col-span-1 space-y-4 sm:space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+                    <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-paper-plane text-blue-400"></i> Nuevo Aviso / Nota
                     </h2>
-                    <form id="event-form" onsubmit="saveEvent(event)" class="space-y-4">
+                    <form id="event-form" onsubmit="saveEvent(event)" class="space-y-3 sm:space-y-4">
                         <input type="hidden" id="event-id">
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Título del Mensaje</label>
@@ -218,47 +220,47 @@
             </div>
 
             <!-- PANEL DERECHO: CALENDARIO -->
-            <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-                <div class="flex items-center justify-between mb-6">
+            <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
                     <div class="flex items-center gap-3">
-                        <h2 id="current-month-year" class="text-xl font-bold tracking-wide text-slate-100">Mes Año</h2>
+                        <h2 id="current-month-year" class="text-lg sm:text-xl font-bold tracking-wide text-slate-100">Mes Año</h2>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 self-end sm:self-auto">
                         <button onclick="changeMonth(-1)" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg text-xs transition"><i class="fa-solid fa-chevron-left"></i></button>
                         <button onclick="goToCurrentMonth()" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-xs font-semibold transition">Hoy</button>
                         <button onclick="changeMonth(1)" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg text-xs transition"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-slate-400 mb-2">
+                <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[10px] sm:text-xs font-bold text-slate-400 mb-2">
                     <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div>
                 </div>
 
-                <div id="calendar-grid" class="grid grid-cols-7 gap-2 flex-1"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1 sm:gap-2 flex-1"></div>
             </div>
         </main>
     </div>
 
     <!-- MODAL DETALLE DE EVENTO / CONFIRMACIONES -->
-    <div id="event-detail-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-5">
+    <div id="event-detail-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-circle-info text-blue-400"></i> Detalle del Aviso y Confirmaciones</h3>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-circle-info text-blue-400"></i> Detalle del Aviso</h3>
                 <button onclick="closeEventDetailModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div id="event-detail-content" class="space-y-3 text-xs text-slate-300"></div>
-            <div class="border-t border-slate-800 pt-3 flex justify-between">
-                <button onclick="deleteCurrentModalEvent()" class="bg-red-600/20 text-red-400 border border-red-500/30 px-4 py-2 rounded-lg font-semibold hover:bg-red-600/30 transition">Eliminar Aviso</button>
-                <button onclick="closeEventDetailModal()" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition">Cerrar</button>
+            <div class="border-t border-slate-800 pt-3 flex justify-between gap-2">
+                <button onclick="deleteCurrentModalEvent()" class="bg-red-600/20 text-red-400 border border-red-500/30 px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-red-600/30 transition text-xs">Eliminar</button>
+                <button onclick="closeEventDetailModal()" class="bg-slate-800 hover:bg-slate-700 px-3 sm:px-4 py-2 rounded-lg font-semibold transition text-xs">Cerrar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURACIÓN Y PANEL ADMIN (SUPERADMIN) -->
-    <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl space-y-6">
+    <!-- MODAL DE CONFIGURACIÓN Y PANEL ADMIN -->
+    <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> Panel de Superadministración - Depósito Central</h3>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> Panel de Superadministración</h3>
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
@@ -266,17 +268,17 @@
             <div id="admin-sectors-section" class="space-y-3">
                 <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">1. Gestión de Unidades de Negocio / Sucursales</h4>
                 <form onsubmit="addSector(event)" class="flex gap-2">
-                    <input type="text" id="new-sector-name" required placeholder="Nombre nueva sucursal (ej: Depósito, Administración)..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-xs font-semibold transition">Crear Sucursal</button>
+                    <input type="text" id="new-sector-name" required placeholder="Nombre nueva sucursal..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap">Crear Sucursal</button>
                 </form>
-                <div id="sectors-list" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                <div id="sectors-list" class="space-y-2 max-h-36 overflow-y-auto pr-1"></div>
             </div>
 
             <!-- Sección 2: Creación de Usuarios, Asignación de Roles y Permisos -->
             <div id="admin-users-section" class="space-y-3 pt-4 border-t border-slate-800">
                 <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">2. Generar y Asignar Roles de Usuarios / Sucursales</h4>
-                <form onsubmit="createNewUserAccount(event)" class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
+                <form onsubmit="createNewUserAccount(event)" class="bg-slate-950 border border-slate-800 p-3 sm:p-4 rounded-xl space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[11px] text-slate-400 mb-1">Correo del Usuario</label>
                             <input type="email" id="new-user-email" required class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="sucursal@deportshow.com">
@@ -286,7 +288,7 @@
                             <input type="text" id="new-user-pass" required minlength="6" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="Contraseña">
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                             <label class="block text-[11px] text-slate-400 mb-1">Sucursal Asignada</label>
                             <select id="new-user-sector" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 text-amber-300 font-semibold"></select>
@@ -306,7 +308,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold py-2 rounded-lg transition shadow-md shadow-emerald-600/30">Guardar / Registrar Credenciales</button>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold py-2.5 rounded-lg transition shadow-md shadow-emerald-600/30">Guardar / Registrar Credenciales</button>
                 </form>
                 <div id="users-list-container" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
@@ -314,39 +316,39 @@
     </div>
 
     <!-- MODAL DE CHAT INTERNO -->
-    <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full h-[85vh] shadow-2xl flex flex-col overflow-hidden">
-            <div class="bg-slate-950 px-6 py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
-                <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-comments text-blue-400"></i> Chat Interno de Sucursales</h3>
-                <div class="flex items-center gap-2">
-                    <button onclick="exportChatHistory()" class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5" title="Exportar Historial de Chat">
-                        <i class="fa-solid fa-file-arrow-down"></i> Exportar Chat
+    <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full h-[92vh] sm:h-[85vh] shadow-2xl flex flex-col overflow-hidden">
+            <div class="bg-slate-950 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-comments text-blue-400"></i> Chat Interno</h3>
+                <div class="flex items-center gap-1.5 sm:gap-2">
+                    <button onclick="exportChatHistory()" class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition flex items-center gap-1" title="Exportar Historial">
+                        <i class="fa-solid fa-file-arrow-down"></i> <span class="hidden sm:inline">Exportar</span>
                     </button>
-                    <button id="btn-clear-chat-admin" onclick="clearChatHistoryAdmin()" class="hidden bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5" title="Borrar Historial de Chat">
-                        <i class="fa-solid fa-trash-can"></i> Borrar Chat
+                    <button id="btn-clear-chat-admin" onclick="clearChatHistoryAdmin()" class="hidden bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition flex items-center gap-1" title="Borrar Historial">
+                        <i class="fa-solid fa-trash-can"></i> <span class="hidden sm:inline">Borrar</span>
                     </button>
-                    <button onclick="closeChatModal()" class="text-slate-400 hover:text-white ml-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <button onclick="closeChatModal()" class="text-slate-400 hover:text-white ml-1"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
-            <div class="bg-slate-900/80 px-6 py-3 border-b border-slate-800 flex items-center gap-3">
-                <span class="text-xs text-slate-400 font-semibold">Enviar mensaje a:</span>
-                <select id="chat-target-recipient" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-300 font-semibold focus:outline-none focus:border-blue-500">
+            <div class="bg-slate-900/80 px-4 sm:px-6 py-2.5 border-b border-slate-800 flex items-center gap-2 sm:gap-3">
+                <span class="text-[11px] sm:text-xs text-slate-400 font-semibold whitespace-nowrap">Destino:</span>
+                <select id="chat-target-recipient" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-300 font-semibold focus:outline-none focus:border-blue-500">
                     <option value="TODOS">🌐 Grupo General (Todas las sucursales)</option>
                 </select>
             </div>
-            <div id="chat-messages-container" class="flex-1 p-6 space-y-3 overflow-y-auto bg-slate-950/50"></div>
-            <form onsubmit="sendChatMessage(event)" class="p-4 bg-slate-950 border-t border-slate-800 flex gap-3">
-                <input type="text" id="chat-input-text" required placeholder="Escribe un mensaje..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-blue-500 text-slate-200">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-6 py-2.5 rounded-xl text-xs font-semibold transition">Enviar</button>
+            <div id="chat-messages-container" class="flex-1 p-4 sm:p-6 space-y-3 overflow-y-auto bg-slate-950/50"></div>
+            <form onsubmit="sendChatMessage(event)" class="p-3 sm:p-4 bg-slate-950 border-t border-slate-800 flex gap-2 sm:gap-3">
+                <input type="text" id="chat-input-text" required placeholder="Escribe un mensaje..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 text-xs focus:outline-none focus:border-blue-500 text-slate-200">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 sm:px-6 py-2.5 rounded-xl text-xs font-semibold transition whitespace-nowrap">Enviar</button>
             </form>
         </div>
     </div>
 
     <!-- MODAL DE RELOJES -->
-    <div id="timers-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-5">
+    <div id="timers-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-2xl w-full shadow-2xl space-y-5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-stopwatch text-amber-400"></i> Relojes y Cronómetros</h3>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-stopwatch text-amber-400"></i> Relojes y Cronómetros</h3>
                 <div class="flex items-center gap-3">
                     <button onclick="addNewTimer()" class="bg-amber-600 hover:bg-amber-500 px-3 py-1.5 rounded-lg text-xs font-semibold transition"><i class="fa-solid fa-plus"></i> Nuevo</button>
                     <button onclick="closeTimersModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -356,39 +358,39 @@
         </div>
     </div>
 
-    <!-- POPUP FLOTANTE DE ALARMA CON CONFIRMACIÓN -->
+    <!-- POPUP FLOTANTE DE ALARMA -->
     <div id="alarm-popup" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-8 max-w-md w-full shadow-2xl alarm-overlay-glow text-center space-y-6">
-            <div class="inline-block text-amber-400 text-6xl bell-swing yellow-bell-glow">
+        <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl alarm-overlay-glow text-center space-y-5 sm:space-y-6">
+            <div class="inline-block text-amber-400 text-5xl sm:text-6xl bell-swing yellow-bell-glow">
                 <i class="fa-solid fa-bell"></i>
             </div>
             <div>
-                <h2 id="alarm-popup-title" class="text-2xl font-black text-red-400 tracking-wider">¡AVISO PARA SUCURSAL!</h2>
-                <div id="alarm-popup-target" class="inline-block bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider mt-2">Destino: --</div>
+                <h2 id="alarm-popup-title" class="text-xl sm:text-2xl font-black text-red-400 tracking-wider">¡AVISO PARA SUCURSAL!</h2>
+                <div id="alarm-popup-target" class="inline-block bg-blue-600/30 text-blue-300 border border-blue-500/40 text-[11px] sm:text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider mt-2">Destino: --</div>
             </div>
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-left space-y-2">
                 <p class="text-xs text-slate-400 font-semibold uppercase">Detalle:</p>
-                <p id="alarm-popup-desc" class="text-sm text-slate-200">--</p>
+                <p id="alarm-popup-desc" class="text-xs sm:text-sm text-slate-200">--</p>
             </div>
             <div class="space-y-2">
                 <button onclick="confirmAlarmRead()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition text-xs tracking-wider uppercase shadow-lg shadow-emerald-600/40 text-white flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check-double"></i> Confirmar Lectura
                 </button>
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="snoozeAlarm()" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 font-bold py-2.5 rounded-xl transition text-[11px] tracking-wider uppercase">Pausar (5m)</button>
-                    <button onclick="disableAlarmPermanently()" class="bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl transition text-[11px] tracking-wider uppercase text-slate-300">Cerrar</button>
+                    <button onclick="snoozeAlarm()" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase">Pausar (5m)</button>
+                    <button onclick="disableAlarmPermanently()" class="bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase text-slate-300">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+    <div id="toast-container" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 space-y-2 pointer-events-none"></div>
 
-    <div id="floating-minimized-clock" onclick="restoreFromMinimized()" class="fixed bottom-6 left-6 z-40 bg-slate-900/90 border border-slate-800 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-2xl cursor-pointer hover:border-blue-500 transition hidden items-center gap-3">
+    <div id="floating-minimized-clock" onclick="restoreFromMinimized()" class="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-40 bg-slate-900/90 border border-slate-800 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-2xl cursor-pointer hover:border-blue-500 transition hidden items-center gap-3">
         <div class="text-amber-400 text-lg"><i class="fa-solid fa-clock"></i></div>
         <div>
-            <div id="mini-clock-time" class="retro-clock text-lg font-bold text-amber-400 leading-none">00:00:00</div>
-            <div id="mini-clock-date" class="text-[10px] text-slate-400 uppercase mt-0.5">--</div>
+            <div id="mini-clock-time" class="retro-clock text-base sm:text-lg font-bold text-amber-400 leading-none">00:00:00</div>
+            <div id="mini-clock-date" class="text-[9px] sm:text-[10px] text-slate-400 uppercase mt-0.5">--</div>
         </div>
     </div>
 
@@ -431,7 +433,6 @@
             currentModalEventId: null
         };
 
-        // Único correo predeterminado estrictamente inicial para bootstrap de emergencia
         const MASTER_ADMIN_EMAIL = "simongeorge1st@gmail.com";
 
         function playWindowsStartupChime() {
@@ -471,15 +472,13 @@
         function playChatBellSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                if (ctx.state === 'suspended') {
-                    ctx.resume();
-                }
+                if (ctx.state === 'suspended') { ctx.resume(); }
                 const now = ctx.currentTime;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, now); // Re5
-                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.3); // Re6
+                osc.frequency.setValueAtTime(587.33, now);
+                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.3);
                 gain.gain.setValueAtTime(0.25, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
                 osc.connect(gain);
@@ -519,7 +518,6 @@
                 }
 
                 const userPerm = window.appState.usersPermissions[emailLower];
-                // Evaluación estricta y directa del rol guardado en la base de datos o estado
                 window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL) || (userPerm && userPerm.role === 'admin');
                 
                 document.getElementById('auth-screen').classList.add('hidden');
@@ -528,11 +526,7 @@
                 document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                 
                 const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
-                if(window.isAdmin) {
-                    btnClearChatAdmin.classList.remove('hidden');
-                } else {
-                    btnClearChatAdmin.classList.add('hidden');
-                }
+                if(window.isAdmin) { btnClearChatAdmin.classList.remove('hidden'); } else { btnClearChatAdmin.classList.add('hidden'); }
 
                 applyUserPermissions(user.email);
                 playWindowsStartupChime();
@@ -551,6 +545,7 @@
             const adminUsers = document.getElementById('admin-users-section');
             const btnExport = document.getElementById('btn-export');
             const btnTimers = document.getElementById('btn-timers');
+            const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
 
             if(window.isAdmin) {
                 settingsBtnText.innerText = "Panel Admin";
@@ -558,10 +553,12 @@
                 adminUsers.classList.remove('hidden');
                 btnExport.classList.remove('hidden');
                 btnTimers.classList.remove('hidden');
+                if(btnClearChatAdmin) btnClearChatAdmin.classList.remove('hidden');
             } else {
                 settingsBtnText.innerText = "Configurar";
                 adminSectors.classList.add('hidden');
                 adminUsers.classList.add('hidden');
+                if(btnClearChatAdmin) btnClearChatAdmin.classList.add('hidden');
                 
                 const emailLower = email.toLowerCase();
                 const perms = window.appState.usersPermissions[emailLower] || { export: true, timers: true };
@@ -588,11 +585,7 @@
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (err) {
-                alert("Error al iniciar sesión: " + err.message);
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } catch (err) { alert("Error al iniciar sesión: " + err.message); }
         };
 
         window.handleRegister = async function(e) {
@@ -605,25 +598,17 @@
                     window.appState.usersPermissions[email] = { sector: window.appState.sectors[0] || 'General', role: 'branch', password: pass, export: true, timers: true };
                     saveGlobalData();
                 }
-                showToast("Cuenta de sucursal creada con éxito");
-            } catch (err) {
-                alert("Error al registrar: " + err.message);
-            }
+                showToast("Cuenta creada con éxito");
+            } catch (err) { alert("Error al registrar: " + err.message); }
         };
 
         window.handleForgotPassword = async function() {
             const email = document.getElementById('login-email').value;
             if(!email) { alert("Ingresa tu correo electrónico primero."); return; }
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Correo de recuperación enviado a " + email);
-            } catch(err) { alert("Error: " + err.message); }
+            try { await sendPasswordResetEmail(auth, email); alert("Correo de recuperación enviado a " + email); } catch(err) { alert("Error: " + err.message); }
         };
 
-        window.handleLogout = async function() {
-            await signOut(auth);
-            showToast("Sesión cerrada");
-        };
+        window.handleLogout = async function() { await signOut(auth); showToast("Sesión cerrada"); };
 
         function loadGlobalData() {
             const docRef = doc(db, "enterprise_data", "main_workspace");
@@ -634,22 +619,16 @@
                     
                     if(data.events) window.appState.events = data.events;
                     if(data.sectors) window.appState.sectors = data.sectors;
-                    if(data.usersPermissions) {
-                        window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions };
-                    }
+                    if(data.usersPermissions) { window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions }; }
                     if(data.chatMessages) {
                         window.appState.chatMessages = data.chatMessages;
                         if(window.appState.chatMessages.length > oldChatLength && oldChatLength > 0) {
                             const lastMsg = window.appState.chatMessages[window.appState.chatMessages.length - 1];
-                            if(window.currentUser && lastMsg.sender !== window.currentUser.email) {
-                                triggerChatAlertUI();
-                            }
+                            if(window.currentUser && lastMsg.sender !== window.currentUser.email) { triggerChatAlertUI(); }
                         }
                     }
                     if(data.timers) window.appState.timers = data.timers;
-                } else {
-                    saveGlobalData();
-                }
+                } else { saveGlobalData(); }
                 updateSectorsUI();
                 renderCalendar();
                 renderChatMessages();
@@ -687,7 +666,6 @@
                 timers: window.appState.timers
             };
             localStorage.setItem('enterprise_workspace_data', JSON.stringify(dataToSave));
-
             const docRef = doc(db, "enterprise_data", "main_workspace");
             setDoc(docRef, dataToSave).catch(err => console.log("Cloud sync error:", err));
         }
@@ -739,18 +717,16 @@
 
             const userKeys = Object.keys(window.appState.usersPermissions);
             if(userKeys.length === 0) {
-                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay usuarios registrados en el sistema todavía.</div>`;
+                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay usuarios registrados.</div>`;
             } else {
                 for(let [email, perm] of Object.entries(window.appState.usersPermissions)) {
                     const passVal = perm.password || '******';
                     const isUserAdmin = perm.role === 'admin';
-                    const roleBadgeClass = isUserAdmin 
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' 
-                        : 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+                    const roleBadgeClass = isUserAdmin ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30';
                     const roleLabel = isUserAdmin ? '👑 Superadmin' : '🏢 Sucursal';
 
                     usersContainer.innerHTML += `
-                        <div class="flex items-center justify-between bg-slate-950 border border-slate-800 px-3 py-2.5 rounded-lg text-xs gap-2">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-slate-950 border border-slate-800 p-3 rounded-lg text-xs gap-2">
                             <div class="space-y-1">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="font-bold text-slate-200">${email}</span>
@@ -759,19 +735,13 @@
                                 </div>
                                 <div class="text-[10px] text-amber-400 flex items-center gap-1.5">
                                     Clave: <span id="pass-view-${email.replace(/[@.]/g, '_')}" class="font-mono">${passVal}</span>
-                                    <button onclick="togglePasswordView('${email}')" class="text-slate-400 hover:text-amber-300" title="Ver / Ocultar Clave"><i id="eye-icon-${email.replace(/[@.]/g, '_')}" class="fa-solid fa-eye text-[10px]"></i></button>
+                                    <button onclick="togglePasswordView('${email}')" class="text-slate-400 hover:text-amber-300"><i id="eye-icon-${email.replace(/[@.]/g, '_')}" class="fa-solid fa-eye text-[10px]"></i></button>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1.5">
-                                <button onclick="toggleUserRole('${email}')" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 px-2.5 py-1 rounded text-[11px] font-semibold transition" title="Cambiar entre Sucursal y Superadmin">
-                                    <i class="fa-solid fa-user-gear"></i> Rol
-                                </button>
-                                <button onclick="editUserAccount('${email}')" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 px-2.5 py-1 rounded text-[11px] font-semibold transition" title="Editar sucursal o clave">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-                                <button onclick="deleteUserAccount('${email}')" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2.5 py-1 rounded text-[11px] transition" title="Revocar acceso">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                            <div class="flex items-center gap-1.5 self-end sm:self-auto">
+                                <button onclick="toggleUserRole('${email}')" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 px-2 py-1 rounded text-[11px] font-semibold transition" title="Cambiar Rol"><i class="fa-solid fa-user-gear"></i> Rol</button>
+                                <button onclick="editUserAccount('${email}')" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 px-2 py-1 rounded text-[11px] font-semibold transition" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteUserAccount('${email}')" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2 py-1 rounded text-[11px] transition" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -785,7 +755,6 @@
             const iconElem = document.getElementById(`eye-icon-${safeId}`);
             const perm = window.appState.usersPermissions[email];
             if(!perm) return;
-
             if(spanElem.innerText === '******') {
                 spanElem.innerText = perm.password || 'Sin clave';
                 iconElem.className = "fa-solid fa-eye-slash text-[10px]";
@@ -798,21 +767,17 @@
         window.toggleUserRole = function(email) {
             const currentPerm = window.appState.usersPermissions[email];
             if(!currentPerm) return;
-            
-            // Alternar estrictamente rol
             currentPerm.role = currentPerm.role === 'admin' ? 'branch' : 'admin';
             window.appState.usersPermissions[email] = currentPerm;
             saveGlobalData();
             updateSectorsUI();
 
-            // Si el usuario actual es el mismo que está logueado, actualizar de inmediato su vista corporativa
             if(window.currentUser && window.currentUser.email.toLowerCase() === email.toLowerCase()) {
                 window.isAdmin = (email.toLowerCase() === MASTER_ADMIN_EMAIL) || (currentPerm.role === 'admin');
                 document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                 applyUserPermissions(window.currentUser.email);
             }
-
-            showToast(`Rol de ${email} cambiado a: ${currentPerm.role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
+            showToast(`Rol cambiado a: ${currentPerm.role === 'admin' ? 'Superadmin' : 'Sucursal'}`);
         };
 
         window.createNewUserAccount = async function(e) {
@@ -824,21 +789,18 @@
             const canExport = document.getElementById('perm-export').checked;
             const canTimers = document.getElementById('perm-timers').checked;
 
-            try {
-                await createUserWithEmailAndPassword(auth, email, pass);
-            } catch(err) {}
-
+            try { await createUserWithEmailAndPassword(auth, email, pass); } catch(err) {}
             window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
             saveGlobalData();
             updateSectorsUI();
-            showToast(`Credenciales guardadas para ${email} (${role === 'admin' ? 'Superadmin' : 'Sucursal'})`);
+            showToast(`Credenciales guardadas para ${email}`);
             document.getElementById('new-user-email').value = '';
             document.getElementById('new-user-pass').value = '';
         };
 
         window.editUserAccount = async function(email) {
             const currentData = window.appState.usersPermissions[email] || {};
-            const newRole = prompt(`Cambiar rol para ${email}:\nEscribe exactamente 'branch' para Sucursal o 'admin' para Superadministrador:`, currentData.role || 'branch');
+            const newRole = prompt(`Cambiar rol para ${email} ('branch' o 'admin'):`, currentData.role || 'branch');
             if(newRole !== null && (newRole === 'admin' || newRole === 'branch')) {
                 currentData.role = newRole;
                 window.appState.usersPermissions[email] = currentData;
@@ -850,11 +812,8 @@
                     document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
                     applyUserPermissions(window.currentUser.email);
                 }
-
-                showToast(`Rol de ${email} actualizado a: ${newRole === 'admin' ? 'Superadmin' : 'Sucursal'}`);
-            } else if(newRole !== null) {
-                alert("Rol inválido. Debe ser 'branch' o 'admin'.");
-            }
+                showToast(`Rol actualizado a: ${newRole}`);
+            } else if(newRole !== null) { alert("Rol inválido."); }
         };
 
         window.deleteUserAccount = function(email) {
@@ -875,7 +834,7 @@
                 input.value = '';
                 saveGlobalData();
                 updateSectorsUI();
-                showToast("Sucursal creada con éxito");
+                showToast("Sucursal creada");
             }
         };
 
@@ -893,10 +852,7 @@
         };
 
         window.deleteSector = function(name) {
-            if(window.appState.sectors.length <= 1) {
-                alert("Debe existir al menos una sucursal.");
-                return;
-            }
+            if(window.appState.sectors.length <= 1) { alert("Debe existir al menos una sucursal."); return; }
             if(confirm(`¿Eliminar la sucursal ${name}?`)) {
                 window.appState.sectors = window.appState.sectors.filter(s => s !== name);
                 saveGlobalData();
@@ -930,14 +886,11 @@
         window.ringMessageBell = function(msgId) {
             playChatBellSound();
             triggerChatAlertUI();
-            showToast("🔔 ¡Alerta de campanita enviada!");
+            showToast("🔔 ¡Alerta enviada!");
         };
 
         window.exportChatHistory = function() {
-            if(window.appState.chatMessages.length === 0) {
-                alert("No hay mensajes en el historial de chat para exportar.");
-                return;
-            }
+            if(window.appState.chatMessages.length === 0) { alert("No hay mensajes."); return; }
             let csvContent = "data:text/csv;charset=utf-8,Remitente,Destinatario,Hora,Mensaje\n";
             window.appState.chatMessages.forEach(msg => {
                 csvContent += `"${msg.sender}","${msg.recipient}","${msg.timestamp}","${msg.text.replace(/"/g, '""')}"\n`;
@@ -948,17 +901,17 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("Historial de chat exportado correctamente");
+            showToast("Chat exportado");
         };
 
         window.clearChatHistoryAdmin = function() {
             if(!window.isAdmin) return;
-            if(confirm("⚠️ ¿Estás seguro de vaciar y borrar TODO el historial de chat corporativo?\n\n(Se descargará una copia de seguridad CSV automáticamente antes de borrar).")) {
+            if(confirm("⚠️ ¿Vaciar y borrar TODO el chat corporativo? (Se descargará una copia CSV automática antes).")) {
                 window.exportChatHistory();
                 window.appState.chatMessages = [];
                 saveGlobalData();
                 renderChatMessages();
-                showToast("Historial de chat borrado por el Superadministrador");
+                showToast("Chat borrado");
             }
         };
 
@@ -997,11 +950,9 @@
                             <span class="font-bold text-slate-300">${msg.sender}</span>
                             <span class="bg-slate-900 px-2 py-0.5 rounded text-amber-300 border border-slate-800">${recipientLabel}</span>
                             <span>${msg.timestamp}</span>
-                            <button onclick="ringMessageBell('${msg.id}')" title="Tocar campanita para re-notificar" class="text-amber-400 hover:text-amber-300 px-1 py-0.5 transition hover:scale-125">
-                                <i class="fa-solid fa-bell"></i>
-                            </button>
+                            <button onclick="ringMessageBell('${msg.id}')" title="Campanita" class="text-amber-400 hover:text-amber-300 px-1 py-0.5"><i class="fa-solid fa-bell"></i></button>
                         </div>
-                        <div class="max-w-[80%] bg-slate-900 border ${isMe ? 'border-blue-500/40 text-slate-100' : 'border-slate-800 text-slate-200'} p-3 rounded-2xl text-xs shadow">
+                        <div class="max-w-[85%] sm:max-w-[80%] bg-slate-900 border ${isMe ? 'border-blue-500/40 text-slate-100' : 'border-slate-800 text-slate-200'} p-3 rounded-2xl text-xs shadow">
                             ${msg.text}
                         </div>
                     </div>
@@ -1025,7 +976,7 @@
             const filterSec = document.getElementById('filter-sector').value;
 
             for(let i = 0; i < firstDayIndex; i++) {
-                grid.innerHTML += `<div class="bg-slate-950/40 border border-slate-900 rounded-xl p-2 min-h-[90px] opacity-30"></div>`;
+                grid.innerHTML += `<div class="bg-slate-950/40 border border-slate-900 rounded-xl p-1 sm:p-2 min-h-[75px] sm:min-h-[90px] opacity-30"></div>`;
             }
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -1042,23 +993,21 @@
                         let dotColor = 'bg-emerald-400';
                         if(ev.priority === 'yellow') dotColor = 'bg-amber-400';
                         if(ev.priority === 'red') dotColor = 'bg-red-500';
-                        dotsHtml += `<span class="w-2 h-2 rounded-full ${dotColor}"></span>`;
+                        dotsHtml += `<span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${dotColor}"></span>`;
                     });
-                    if(dayEvents.length > 3) {
-                        dotsHtml += `<span class="text-[9px] text-slate-400">+${dayEvents.length - 3}</span>`;
-                    }
+                    if(dayEvents.length > 3) { dotsHtml += `<span class="text-[8px] sm:text-[9px] text-slate-400">+${dayEvents.length - 3}</span>`; }
                     dotsHtml += `</div>`;
                 }
 
                 let eventsHtml = '';
                 if(isExpanded && dayEvents.length > 0) {
-                    eventsHtml += `<div class="space-y-1 mt-1 border-t border-slate-800 pt-1 max-h-32 overflow-y-auto">`;
+                    eventsHtml += `<div class="space-y-1 mt-1 border-t border-slate-800 pt-1 max-h-24 sm:max-h-32 overflow-y-auto">`;
                     dayEvents.forEach(ev => {
                         let badgeColor = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
                         if(ev.priority === 'yellow') badgeColor = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
                         if(ev.priority === 'red') badgeColor = 'bg-red-500/20 text-red-300 border-red-500/30';
                         eventsHtml += `
-                            <div onclick="openEventDetail('${ev.id}')" class="text-[10px] p-1 rounded border ${badgeColor} cursor-pointer truncate shadow-sm hover:opacity-80 transition flex justify-between items-center">
+                            <div onclick="openEventDetail('${ev.id}')" class="text-[9px] sm:text-[10px] p-1 rounded border ${badgeColor} cursor-pointer truncate shadow-sm flex justify-between items-center">
                                 <span class="font-bold">${ev.time}</span> <span class="truncate ml-1">${ev.title}</span>
                             </div>
                         `;
@@ -1067,13 +1016,13 @@
                 }
 
                 grid.innerHTML += `
-                    <div class="bg-slate-950 border ${isToday ? 'border-blue-500 ring-1 ring-blue-500' : 'border-slate-800'} rounded-xl p-2 min-h-[90px] flex flex-col justify-between overflow-hidden">
+                    <div class="bg-slate-950 border ${isToday ? 'border-blue-500 ring-1 ring-blue-500' : 'border-slate-800'} rounded-xl p-1.5 sm:p-2 min-h-[75px] sm:min-h-[90px] flex flex-col justify-between overflow-hidden">
                         <div>
-                            <div class="flex justify-between items-center text-xs font-bold text-slate-400">
-                                <span class="${isToday ? 'bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center' : ''}">${day}</span>
-                                <div class="flex items-center gap-1">
-                                    ${dayEvents.length > 0 ? `<button onclick="toggleDayExpand('${dateStr}')" class="text-slate-400 hover:text-white text-[10px] p-1"><i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'}"></i></button>` : ''}
-                                    <button onclick="quickAddEvent('${dateStr}')" class="text-slate-600 hover:text-slate-300 text-[10px] p-1"><i class="fa-solid fa-plus"></i></button>
+                            <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold text-slate-400">
+                                <span class="${isToday ? 'bg-blue-600 text-white w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center' : ''}">${day}</span>
+                                <div class="flex items-center gap-0.5">
+                                    ${dayEvents.length > 0 ? `<button onclick="toggleDayExpand('${dateStr}')" class="text-slate-400 hover:text-white text-[9px] sm:text-[10px] p-0.5"><i class="fa-solid fa-chevron-${isExpanded ? 'up' : 'down'}"></i></button>` : ''}
+                                    <button onclick="quickAddEvent('${dateStr}')" class="text-slate-600 hover:text-slate-300 text-[9px] sm:text-[10px] p-0.5"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                             </div>
                             ${dotsHtml}
@@ -1096,17 +1045,13 @@
             
             const content = document.getElementById('event-detail-content');
             let confHtml = '';
-            
             if(ev.confirmations && Object.keys(ev.confirmations).length > 0) {
-                confHtml = `<div class="space-y-1 mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-emerald-400 mb-1">Confirmaciones de Lectura:</p>`;
+                confHtml = `<div class="space-y-1 mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800"><p class="font-bold text-emerald-400 mb-1">Confirmaciones:</p>`;
                 for(let [sec, time] of Object.entries(ev.confirmations)) {
                     confHtml += `<div class="flex justify-between text-[11px] text-slate-300"><span>🏢 ${sec}</span> <span class="text-amber-400 font-mono">${time}</span></div>`;
                 }
                 confHtml += `</div>`;
-            } else {
-                confHtml = `<div class="mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-slate-400 text-center italic">Ninguna sucursal ha confirmado este aviso todavía.</div>`;
-            }
+            } else { confHtml = `<div class="mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-slate-400 text-center italic">Sin confirmaciones todavía.</div>`; }
 
             content.innerHTML = `
                 <div class="space-y-2 bg-slate-950 p-4 rounded-xl border border-slate-800">
@@ -1123,7 +1068,7 @@
         window.closeEventDetailModal = () => document.getElementById('event-detail-modal').classList.add('hidden');
 
         window.deleteCurrentModalEvent = function() {
-            if(confirm("¿Estás seguro de eliminar este aviso?")) {
+            if(confirm("¿Eliminar este aviso?")) {
                 window.appState.events = window.appState.events.filter(e => e.id !== window.appState.currentModalEventId);
                 saveGlobalData();
                 renderCalendar();
@@ -1145,11 +1090,7 @@
             const desc = document.getElementById('event-desc').value;
 
             const existing = window.appState.events.find(ev => ev.id === id);
-            const eventObj = { 
-                id, title, date, time, sector, priority, alarmEnabled, repeat, desc, 
-                triggered: false, 
-                confirmations: existing ? (existing.confirmations || {}) : {} 
-            };
+            const eventObj = { id, title, date, time, sector, priority, alarmEnabled, repeat, desc, triggered: false, confirmations: existing ? (existing.confirmations || {}) : {} };
 
             const existingIdx = window.appState.events.findIndex(ev => ev.id === id);
             if(existingIdx >= 0) {
@@ -1157,9 +1098,8 @@
                 showToast("Aviso modificado");
             } else {
                 window.appState.events.push(eventObj);
-                showToast("Aviso enviado con éxito");
+                showToast("Aviso enviado");
             }
-
             document.getElementById('event-form').reset();
             document.getElementById('event-id').value = '';
             document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
@@ -1172,7 +1112,7 @@
             const month = window.appState.currentDate.getMonth();
             const monthPrefix = `${year}-${String(month+1).padStart(2,'0')}`;
             const monthEvents = window.appState.events.filter(ev => ev.date.startsWith(monthPrefix));
-            if(monthEvents.length === 0) { alert("No hay registros para este mes."); return; }
+            if(monthEvents.length === 0) { alert("No hay registros."); return; }
 
             let csvContent = "data:text/csv;charset=utf-8,Fecha,Hora,Destino,Prioridad,Título,Contenido,Confirmaciones\n";
             monthEvents.forEach(ev => {
@@ -1181,11 +1121,11 @@
             });
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", `Reporte_Confirmaciones_${monthPrefix}.csv`);
+            link.setAttribute("download", `Reporte_${monthPrefix}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("Reporte con confirmaciones exportado");
+            showToast("Reporte exportado");
         };
 
         window.renderTimers = function() {
@@ -1195,17 +1135,15 @@
             window.appState.timers.forEach((t, idx) => {
                 const timeStr = t.type === 'stopwatch' ? formatTimeDisplay(t.elapsed || 0) : formatTimeDisplay(t.timeLeft);
                 container.innerHTML += `
-                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-4">
+                    <div class="bg-slate-950 border border-slate-800 p-3 sm:p-4 rounded-xl flex items-center justify-between gap-4">
                         <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-bold text-sm text-slate-200">${t.name}</span>
-                            </div>
-                            <div class="retro-clock text-2xl font-bold text-amber-400">${timeStr}</div>
+                            <div class="font-bold text-xs sm:text-sm text-slate-200 mb-1">${t.name}</div>
+                            <div class="retro-clock text-xl sm:text-2xl font-bold text-amber-400">${timeStr}</div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="startTimer(${idx})" class="bg-emerald-600/20 text-emerald-400 px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-play"></i></button>
-                            <button onclick="pauseTimer(${idx})" class="bg-amber-600/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-pause"></i></button>
-                            <button onclick="deleteTimer(${idx})" class="bg-red-600/20 text-red-400 px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                        <div class="flex items-center gap-1.5 sm:gap-2">
+                            <button onclick="startTimer(${idx})" class="bg-emerald-600/20 text-emerald-400 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-play"></i></button>
+                            <button onclick="pauseTimer(${idx})" class="bg-amber-600/20 text-amber-400 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-pause"></i></button>
+                            <button onclick="deleteTimer(${idx})" class="bg-red-600/20 text-red-400 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -1270,7 +1208,7 @@
                 ev.confirmations[userSector] = timeString;
                 saveGlobalData();
                 renderCalendar();
-                showToast("¡Lectura confirmada y registrada!");
+                showToast("¡Lectura confirmada!");
             }
         };
 
@@ -1280,7 +1218,7 @@
             now.setMinutes(now.getMinutes() + 5);
             const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
             if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggered = false; saveGlobalData(); renderCalendar(); }
-            showToast("Aviso pospuesto 5 minutos");
+            showToast("Pospuesto 5 minutos");
         };
 
         window.disableAlarmPermanently = function() {
