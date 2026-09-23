@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Pro Colaborativa By Psimon</title>
+    <!-- Enlace PWA manifest -->
+    <link rel="manifest" href="manifest.json">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome para Iconos -->
@@ -388,7 +390,6 @@
                 <button onclick="confirmAlarmRead()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition text-xs tracking-wider uppercase shadow-lg shadow-emerald-600/40 text-white flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check-double"></i> Confirmar Lectura Obligatoria
                 </button>
-                <!-- Opciones secundarias ocultas si el aviso es rojo bloqueante -->
                 <div id="alarm-snooze-container" class="grid grid-cols-2 gap-3">
                     <button onclick="snoozeAlarm()" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase">Pausar (5m)</button>
                     <button onclick="disableAlarmPermanently()" class="bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase text-slate-300">Cerrar</button>
@@ -1245,7 +1246,6 @@
                     document.getElementById('alarm-popup-target').innerText = `Destino: ${ev.sector}`;
                     document.getElementById('alarm-popup-desc').innerText = ev.desc || 'Sin detalles.';
                     
-                    // Si es prioridad Roja, bloquear opciones de cerrar o posponer
                     const snoozeContainer = document.getElementById('alarm-snooze-container');
                     if(ev.priority === 'red') {
                         snoozeContainer.classList.add('hidden');
