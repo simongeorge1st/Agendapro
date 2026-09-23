@@ -50,13 +50,11 @@
                 <p class="text-xs sm:text-sm text-slate-400 mt-1">Plataforma Corporativa Multiusuario</p>
             </div>
 
-            <!-- Tabs Login / Register -->
             <div class="flex border-b border-slate-800 mb-6">
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 pb-3 text-sm font-semibold text-blue-400 border-b-2 border-blue-500 transition">Iniciar Sesión</button>
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 pb-3 text-sm font-semibold text-slate-400 border-b-2 border-transparent transition">Registrarse</button>
             </div>
 
-            <!-- Formulario Login -->
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Correo Electrónico</label>
@@ -72,7 +70,6 @@
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 font-semibold py-2.5 rounded-lg transition shadow-lg shadow-blue-600/30">Ingresar al Sistema</button>
             </form>
 
-            <!-- Formulario Registro -->
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Correo Electrónico</label>
@@ -90,7 +87,7 @@
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-container" class="hidden flex flex-col min-h-screen">
         
-        <!-- HEADER SUPERIOR RESPONSIVE -->
+        <!-- HEADER SUPERIOR -->
         <header class="bg-slate-900 border-b border-slate-800 px-3 sm:px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3 sticky top-0 z-30">
             <div class="flex items-center justify-between w-full md:w-auto gap-3">
                 <div class="flex items-center gap-3">
@@ -117,10 +114,13 @@
                 </button>
             </div>
 
-            <!-- BOTONERA DE ACCIÓN SUPERIOR -->
+            <!-- BOTONERA DE ACCIÓN -->
             <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 justify-start md:justify-end">
                 <button id="btn-chat" onclick="openChatModal()" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 relative whitespace-nowrap">
                     <i class="fa-solid fa-comments"></i> Chat <span id="chat-badge" class="hidden w-2 h-2 rounded-full bg-red-500 absolute top-1 right-1"></span>
+                </button>
+                <button onclick="openHistoryModal()" class="bg-purple-600/25 hover:bg-purple-600/35 border border-purple-500/30 text-purple-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fa-solid fa-box-archive"></i> Historial
                 </button>
                 <button id="btn-export" onclick="exportMonthAlarms()" class="bg-emerald-600/25 hover:bg-emerald-600/35 border border-emerald-500/30 text-emerald-300 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-file-arrow-down"></i> Exportar
@@ -174,7 +174,7 @@
                                 <select id="event-priority" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-blue-500">
                                     <option value="green">Verde (Informativa)</option>
                                     <option value="yellow">Amarilla (Media)</option>
-                                    <option value="red">Roja (Urgente)</option>
+                                    <option value="red">Roja (Urgente / Bloqueante)</option>
                                 </select>
                             </div>
                         </div>
@@ -241,7 +241,7 @@
         </main>
     </div>
 
-    <!-- MODAL DETALLE DE EVENTO / CONFIRMACIONES -->
+    <!-- MODAL DETALLE DE EVENTO -->
     <div id="event-detail-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -256,6 +256,20 @@
         </div>
     </div>
 
+    <!-- MODAL HISTORIAL Y ARCHIVO DE AVISOS -->
+    <div id="history-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-box-archive text-purple-400"></i> Archivo e Historial de Avisos y Auditoría</h3>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="history-search" oninput="renderHistoryList()" placeholder="Buscar por título, sucursal o fecha..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-purple-500">
+            </div>
+            <div id="history-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
+        </div>
+    </div>
+
     <!-- MODAL DE CONFIGURACIÓN Y PANEL ADMIN -->
     <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
@@ -264,7 +278,6 @@
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <!-- Sección 1: Gestión de Sucursales -->
             <div id="admin-sectors-section" class="space-y-3">
                 <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">1. Gestión de Unidades de Negocio / Sucursales</h4>
                 <form onsubmit="addSector(event)" class="flex gap-2">
@@ -274,7 +287,6 @@
                 <div id="sectors-list" class="space-y-2 max-h-36 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- Sección 2: Creación de Usuarios, Asignación de Roles y Permisos -->
             <div id="admin-users-section" class="space-y-3 pt-4 border-t border-slate-800">
                 <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">2. Generar y Asignar Roles de Usuarios / Sucursales</h4>
                 <form onsubmit="createNewUserAccount(event)" class="bg-slate-950 border border-slate-800 p-3 sm:p-4 rounded-xl space-y-3">
@@ -358,14 +370,14 @@
         </div>
     </div>
 
-    <!-- POPUP FLOTANTE DE ALARMA -->
-    <div id="alarm-popup" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <!-- POPUP FLOTANTE DE ALARMA (BLOQUEANTE SI ES ROJA) -->
+    <div id="alarm-popup" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl alarm-overlay-glow text-center space-y-5 sm:space-y-6">
             <div class="inline-block text-amber-400 text-5xl sm:text-6xl bell-swing yellow-bell-glow">
                 <i class="fa-solid fa-bell"></i>
             </div>
             <div>
-                <h2 id="alarm-popup-title" class="text-xl sm:text-2xl font-black text-red-400 tracking-wider">¡AVISO PARA SUCURSAL!</h2>
+                <h2 id="alarm-popup-title" class="text-xl sm:text-2xl font-black text-red-400 tracking-wider">¡AVISO URGENTE!</h2>
                 <div id="alarm-popup-target" class="inline-block bg-blue-600/30 text-blue-300 border border-blue-500/40 text-[11px] sm:text-xs px-3 py-1 rounded-full uppercase font-bold tracking-wider mt-2">Destino: --</div>
             </div>
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-left space-y-2">
@@ -374,9 +386,10 @@
             </div>
             <div class="space-y-2">
                 <button onclick="confirmAlarmRead()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition text-xs tracking-wider uppercase shadow-lg shadow-emerald-600/40 text-white flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check-double"></i> Confirmar Lectura
+                    <i class="fa-solid fa-check-double"></i> Confirmar Lectura Obligatoria
                 </button>
-                <div class="grid grid-cols-2 gap-3">
+                <!-- Opciones secundarias ocultas si el aviso es rojo bloqueante -->
+                <div id="alarm-snooze-container" class="grid grid-cols-2 gap-3">
                     <button onclick="snoozeAlarm()" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase">Pausar (5m)</button>
                     <button onclick="disableAlarmPermanently()" class="bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl transition text-[10px] sm:text-[11px] tracking-wider uppercase text-slate-300">Cerrar</button>
                 </div>
@@ -739,9 +752,9 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1.5 self-end sm:self-auto">
-                                <button onclick="toggleUserRole('${email}')" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 px-2 py-1 rounded text-[11px] font-semibold transition" title="Cambiar Rol"><i class="fa-solid fa-user-gear"></i> Rol</button>
-                                <button onclick="editUserAccount('${email}')" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 px-2 py-1 rounded text-[11px] font-semibold transition" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteUserAccount('${email}')" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2 py-1 rounded text-[11px] transition" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="toggleUserRole('${email}')" class="bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/30 text-amber-300 px-2 py-1 rounded text-[11px] font-semibold transition"><i class="fa-solid fa-user-gear"></i> Rol</button>
+                                <button onclick="editUserAccount('${email}')" class="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 px-2 py-1 rounded text-[11px] font-semibold transition"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteUserAccount('${email}')" class="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 px-2 py-1 rounded text-[11px] transition"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -866,6 +879,44 @@
         window.openTimersModal = () => document.getElementById('timers-modal').classList.remove('hidden');
         window.closeTimersModal = () => document.getElementById('timers-modal').classList.add('hidden');
         
+        window.openHistoryModal = () => {
+            document.getElementById('history-modal').classList.remove('hidden');
+            renderHistoryList();
+        };
+        window.closeHistoryModal = () => document.getElementById('history-modal').classList.add('hidden');
+
+        window.renderHistoryList = function() {
+            const container = document.getElementById('history-list-container');
+            const query = (document.getElementById('history-search').value || "").toLowerCase();
+            container.innerHTML = '';
+
+            const filteredEvents = window.appState.events.filter(ev => {
+                return ev.title.toLowerCase().includes(query) || ev.sector.toLowerCase().includes(query) || ev.date.includes(query);
+            }).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            if(filteredEvents.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No se encontraron avisos en el historial.</p>`;
+                return;
+            }
+
+            filteredEvents.forEach(ev => {
+                const confCount = ev.confirmations ? Object.keys(ev.confirmations).length : 0;
+                container.innerHTML += `
+                    <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl space-y-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-slate-100">${ev.title}</span>
+                            <span class="text-amber-400 font-mono text-[11px]">${ev.date} - ${ev.time}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px]">
+                            <span class="bg-blue-600/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">Destino: ${ev.sector}</span>
+                            <span class="bg-emerald-600/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Confirmaciones: ${confCount}</span>
+                        </div>
+                        <p class="text-slate-400 italic text-[11px]">${ev.desc || 'Sin notas'}</p>
+                    </div>
+                `;
+            });
+        };
+
         window.openChatModal = () => {
             document.getElementById('chat-modal').classList.remove('hidden');
             document.getElementById('chat-badge').classList.add('hidden');
@@ -927,7 +978,8 @@
                 sender: window.currentUser.email,
                 recipient: recipient,
                 text: text,
-                timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+                timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
+                read: false
             });
             input.value = '';
             saveGlobalData();
@@ -944,12 +996,13 @@
             window.appState.chatMessages.forEach(msg => {
                 const isMe = msg.sender === window.currentUser.email;
                 const recipientLabel = msg.recipient === 'TODOS' ? '🌐 Grupo General' : `🏢 Para: ${msg.recipient}`;
+                const checkIcon = isMe ? `<i class="fa-solid fa-check-double text-emerald-400 ml-1" title="Entregado"></i>` : '';
                 container.innerHTML += `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1">
                         <div class="flex items-center gap-2 text-[10px] text-slate-400">
                             <span class="font-bold text-slate-300">${msg.sender}</span>
                             <span class="bg-slate-900 px-2 py-0.5 rounded text-amber-300 border border-slate-800">${recipientLabel}</span>
-                            <span>${msg.timestamp}</span>
+                            <span>${msg.timestamp}</span> ${checkIcon}
                             <button onclick="ringMessageBell('${msg.id}')" title="Campanita" class="text-amber-400 hover:text-amber-300 px-1 py-0.5"><i class="fa-solid fa-bell"></i></button>
                         </div>
                         <div class="max-w-[85%] sm:max-w-[80%] bg-slate-900 border ${isMe ? 'border-blue-500/40 text-slate-100' : 'border-slate-800 text-slate-200'} p-3 rounded-2xl text-xs shadow">
@@ -1187,9 +1240,19 @@
                     ev.triggered = true;
                     window.appState.activeAlarmId = ev.id;
                     window.appState.activeAlarmTitle = ev.title;
+                    
                     document.getElementById('alarm-popup-title').innerText = `¡AVISO: ${ev.title}!`;
                     document.getElementById('alarm-popup-target').innerText = `Destino: ${ev.sector}`;
                     document.getElementById('alarm-popup-desc').innerText = ev.desc || 'Sin detalles.';
+                    
+                    // Si es prioridad Roja, bloquear opciones de cerrar o posponer
+                    const snoozeContainer = document.getElementById('alarm-snooze-container');
+                    if(ev.priority === 'red') {
+                        snoozeContainer.classList.add('hidden');
+                    } else {
+                        snoozeContainer.classList.remove('hidden');
+                    }
+
                     document.getElementById('alarm-popup').classList.remove('hidden');
                     playAlarmSound();
                     saveGlobalData();
@@ -1208,22 +1271,24 @@
                 ev.confirmations[userSector] = timeString;
                 saveGlobalData();
                 renderCalendar();
-                showToast("¡Lectura confirmada!");
+                showToast("¡Lectura confirmada y registrada!");
             }
         };
 
         window.snoozeAlarm = function() {
+            const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
+            if(ev && ev.priority === 'red') { alert("Este aviso es de prioridad URGENTE y requiere confirmación obligatoria."); return; }
             document.getElementById('alarm-popup').classList.add('hidden');
             const now = new Date();
             now.setMinutes(now.getMinutes() + 5);
-            const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
             if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggered = false; saveGlobalData(); renderCalendar(); }
             showToast("Pospuesto 5 minutos");
         };
 
         window.disableAlarmPermanently = function() {
-            document.getElementById('alarm-popup').classList.add('hidden');
             const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
+            if(ev && ev.priority === 'red') { alert("Este aviso es de prioridad URGENTE y requiere confirmación obligatoria."); return; }
+            document.getElementById('alarm-popup').classList.add('hidden');
             if(ev) { ev.alarmEnabled = false; saveGlobalData(); renderCalendar(); }
             showToast("Aviso cerrado");
         };
