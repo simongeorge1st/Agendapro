@@ -467,11 +467,12 @@
                     osc.stop(now + idx * 0.12 + 1.5);
                 });
             } catch(e) {}
-        }
+        };
 
         window.playAlarmSound = function() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (ctx.state === 'suspended') { ctx.resume(); }
                 for (let i = 0; i < 5; i++) {
                     const startTime = ctx.currentTime + (i * 0.2);
                     playBeep(ctx, startTime);
@@ -629,17 +630,21 @@
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    let oldChatLength = window.appState.chatMessages.length;
+                    let previousChatLength = window.appState.chatMessages.length;
                     
                     if(data.events) window.appState.events = data.events;
                     if(data.sectors) window.appState.sectors = data.sectors;
                     if(data.usersPermissions) { window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions }; }
                     if(data.chatMessages) {
-                        window.appState.chatMessages = data.chatMessages;
-                        if(window.appState.chatMessages.length > oldChatLength && oldChatLength > 0) {
-                            const lastMsg = window.appState.chatMessages[window.appState.chatMessages.length - 1];
-                            if(window.currentUser && lastMsg.sender !== window.currentUser.email) { triggerChatAlertUI(); }
+                        const newMessages = data.chatMessages;
+                        if(newMessages.length > previousChatLength && previousChatLength > 0) {
+                            const lastMsg = newMessages[newMessages.length - 1];
+                            // Sonar solo si el mensaje NO fue enviado por el usuario actual
+                            if(window.currentUser && lastMsg.sender.toLowerCase() !== window.currentUser.email.toLowerCase()) {
+                                triggerChatAlertUI();
+                            }
                         }
+                        window.appState.chatMessages = newMessages;
                     }
                     if(data.timers) window.appState.timers = data.timers;
                 } else { saveGlobalData(); }
@@ -995,7 +1000,7 @@
                 return;
             }
             window.appState.chatMessages.forEach(msg => {
-                const isMe = msg.sender === window.currentUser.email;
+                const isMe = msg.sender.toLowerCase() === window.currentUser.email.toLowerCase();
                 const recipientLabel = msg.recipient === 'TODOS' ? '🌐 Grupo General' : `🏢 Para: ${msg.recipient}`;
                 const checkIcon = isMe ? `<i class="fa-solid fa-check-double text-emerald-400 ml-1" title="Entregado"></i>` : '';
                 container.innerHTML += `
