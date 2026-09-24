@@ -7,9 +7,9 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%230f172a'/><path fill='%23fbbf24' d='M256 64c-53 0-96 43-96 96v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8h239.6c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V160c0-53-43-96-96-96zm0 384c35.3 0 64-28.7 64-64H192c0 35.3 28.7 64 64 64z'/></svg>",
+      "src": "https://cdn-icons-png.flaticon.com/512/1077/1077063.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
