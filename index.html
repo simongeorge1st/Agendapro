@@ -187,6 +187,12 @@
                                     <input type="checkbox" id="event-alarm-enabled" checked class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0"> Activar Alarma Flotante
                                 </label>
                             </div>
+                            <!-- NUEVO CHECKBOX: INCLUIR MI USUARIO EN ALERTA GENERAL -->
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-medium text-amber-300 flex items-center gap-1.5">
+                                    <input type="checkbox" id="event-include-admin" checked class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0"> Incluir mi usuario en la alarma
+                                </label>
+                            </div>
                             <div>
                                 <label class="block text-[11px] text-slate-400 mb-1">Repetición</label>
                                 <select id="event-repeat" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500">
@@ -639,7 +645,6 @@
                         const newMessages = data.chatMessages;
                         if(newMessages.length > previousChatLength && previousChatLength > 0) {
                             const lastMsg = newMessages[newMessages.length - 1];
-                            // Sonar solo si el mensaje NO fue enviado por el usuario actual
                             if(window.currentUser && lastMsg.sender.toLowerCase() !== window.currentUser.email.toLowerCase()) {
                                 triggerChatAlertUI();
                             }
@@ -1145,11 +1150,12 @@
             const sector = document.getElementById('event-sector').value;
             const priority = document.getElementById('event-priority').value;
             const alarmEnabled = document.getElementById('event-alarm-enabled').checked;
+            const includeAdmin = document.getElementById('event-include-admin').checked; // Captura el estado del nuevo checkbox
             const repeat = document.getElementById('event-repeat').value;
             const desc = document.getElementById('event-desc').value;
 
             const existing = window.appState.events.find(ev => ev.id === id);
-            const eventObj = { id, title, date, time, sector, priority, alarmEnabled, repeat, desc, triggered: false, confirmations: existing ? (existing.confirmations || {}) : {} };
+            const eventObj = { id, title, date, time, sector, priority, alarmEnabled, includeAdmin, repeat, desc, triggered: false, confirmations: existing ? (existing.confirmations || {}) : {} };
 
             const existingIdx = window.appState.events.findIndex(ev => ev.id === id);
             if(existingIdx >= 0) {
@@ -1162,6 +1168,7 @@
             document.getElementById('event-form').reset();
             document.getElementById('event-id').value = '';
             document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('event-include-admin').checked = true; // Restaurar por defecto
             saveGlobalData();
             renderCalendar();
         };
@@ -1242,7 +1249,24 @@
 
             const currentHourMin = timeStr.substring(0,5);
             window.appState.events.forEach(ev => {
-                if(ev.alarmEnabled && !ev.triggered && ev.date === dateStr && ev.time === currentHourMin) {
+                // LÓGICA DE ALARMA ACTUALIZADA CON EL NUEVO CHECKBOX
+                const userSector = window.appState.usersPermissions[window.currentUser.email]?.sector || '';
+                const isMySectorMatch = (ev.sector === userSector);
+                const isForAll = (ev.sector === 'TODOS');
+                
+                // Suena si es para mi sucursal, O si es para todos Y (marcó incluir admin O yo no soy el emisor exclusivo que se silencia)
+                let shouldRingForMe = false;
+                if (isMySectorMatch) {
+                    shouldRingForMe = true;
+                } else if (isForAll) {
+                    if (window.isAdmin && ev.includeAdmin !== false) {
+                        shouldRingForMe = true; // El admin quiso incluirse en este aviso general
+                    } else if (!window.isAdmin) {
+                        shouldRingForMe = true; // Para las sucursales siempre suena el general
+                    }
+                }
+
+                if(ev.alarmEnabled && !ev.triggered && ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
                     ev.triggered = true;
                     window.appState.activeAlarmId = ev.id;
                     window.appState.activeAlarmTitle = ev.title;
