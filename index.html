@@ -187,7 +187,7 @@
                                     <input type="checkbox" id="event-alarm-enabled" checked class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0"> Activar Alarma Flotante
                                 </label>
                             </div>
-                            <!-- NUEVO CHECKBOX: INCLUIR MI USUARIO EN ALERTA GENERAL -->
+                            <!-- CHECKBOX: INCLUIR MI USUARIO EN ALERTA GENERAL -->
                             <div class="flex items-center justify-between">
                                 <label class="text-xs font-medium text-amber-300 flex items-center gap-1.5">
                                     <input type="checkbox" id="event-include-admin" checked class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0"> Incluir mi usuario en la alarma
@@ -1150,12 +1150,16 @@
             const sector = document.getElementById('event-sector').value;
             const priority = document.getElementById('event-priority').value;
             const alarmEnabled = document.getElementById('event-alarm-enabled').checked;
-            const includeAdmin = document.getElementById('event-include-admin').checked; // Captura el estado del nuevo checkbox
+            const includeAdmin = document.getElementById('event-include-admin').checked;
             const repeat = document.getElementById('event-repeat').value;
             const desc = document.getElementById('event-desc').value;
 
             const existing = window.appState.events.find(ev => ev.id === id);
-            const eventObj = { id, title, date, time, sector, priority, alarmEnabled, includeAdmin, repeat, desc, triggered: false, confirmations: existing ? (existing.confirmations || {}) : {} };
+            const eventObj = { 
+                id, title, date, time, sector, priority, alarmEnabled, includeAdmin, repeat, desc, 
+                triggeredUsers: existing ? (existing.triggeredUsers || []) : [], 
+                confirmations: existing ? (existing.confirmations || {}) : {} 
+            };
 
             const existingIdx = window.appState.events.findIndex(ev => ev.id === id);
             if(existingIdx >= 0) {
@@ -1168,7 +1172,7 @@
             document.getElementById('event-form').reset();
             document.getElementById('event-id').value = '';
             document.getElementById('event-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('event-include-admin').checked = true; // Restaurar por defecto
+            document.getElementById('event-include-admin').checked = true;
             saveGlobalData();
             renderCalendar();
         };
@@ -1249,25 +1253,38 @@
 
             const currentHourMin = timeStr.substring(0,5);
             window.appState.events.forEach(ev => {
-                // LÓGICA DE ALARMA ACTUALIZADA CON EL NUEVO CHECKBOX
-                const userSector = window.appState.usersPermissions[window.currentUser.email]?.sector || '';
+                if (!ev.alarmEnabled) return;
+                if (!window.currentUser) return;
+
+                if (!ev.triggeredUsers) {
+                    ev.triggeredUsers = [];
+                }
+
+                const userEmail = window.currentUser.email.toLowerCase();
+                
+                // Si este usuario ya hizo sonar esta alarma, pasamos
+                if (ev.triggeredUsers.includes(userEmail)) return;
+
+                const userSector = window.appState.usersPermissions[userEmail]?.sector || '';
                 const isMySectorMatch = (ev.sector === userSector);
                 const isForAll = (ev.sector === 'TODOS');
                 
-                // Suena si es para mi sucursal, O si es para todos Y (marcó incluir admin O yo no soy el emisor exclusivo que se silencia)
                 let shouldRingForMe = false;
                 if (isMySectorMatch) {
                     shouldRingForMe = true;
                 } else if (isForAll) {
                     if (window.isAdmin && ev.includeAdmin !== false) {
-                        shouldRingForMe = true; // El admin quiso incluirse en este aviso general
+                        shouldRingForMe = true; 
                     } else if (!window.isAdmin) {
-                        shouldRingForMe = true; // Para las sucursales siempre suena el general
+                        shouldRingForMe = true; 
                     }
                 }
 
-                if(ev.alarmEnabled && !ev.triggered && ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
-                    ev.triggered = true;
+                if (ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
+                    // Marcar que este usuario específico ya disparó su alarma
+                    ev.triggeredUsers.push(userEmail);
+                    saveGlobalData();
+
                     window.appState.activeAlarmId = ev.id;
                     window.appState.activeAlarmTitle = ev.title;
                     
@@ -1284,7 +1301,6 @@
 
                     document.getElementById('alarm-popup').classList.remove('hidden');
                     playAlarmSound();
-                    saveGlobalData();
                     renderCalendar();
                 }
             });
@@ -1310,7 +1326,7 @@
             document.getElementById('alarm-popup').classList.add('hidden');
             const now = new Date();
             now.setMinutes(now.getMinutes() + 5);
-            if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggered = false; saveGlobalData(); renderCalendar(); }
+            if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggeredUsers = []; saveGlobalData(); renderCalendar(); }
             showToast("Pospuesto 5 minutos");
         };
 
