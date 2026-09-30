@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts estilo Retro / Moderno -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Favicon de Campana Limpio y Compatible -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path fill='%23fbbf24' d='M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8H393.8c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V200c0-75.8-55.5-138.6-128-150.1V32c0-17.3-14.3-32-32-32zm0 96c44.2 0 80 35.8 80 80v44.2c0 36 11.2 71 31.8 100.2H112.2c20.6-29.2 31.8-64.2 31.8-100.2V176c0-44.2 35.8-80 80-80zm48 352H176c0 26.5 21.5 48 48 48s48-21.5 48-48z'/></svg>">
+    <!-- Favicon Campana Dorada Perfecta -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230f172a'/%3E%3Cpath fill='%23fbbf24' d='M256 64c-53 0-96 43-96 96v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8h239.6c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V160c0-53-43-96-96-96zm0 384c35.3 0 64-28.7 64-64H192c0 35.3 28.7 64 64 64 z'/%3E%3C/svg%3E">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .retro-clock { font-family: 'Share Tech Mono', monospace; }
@@ -47,9 +47,9 @@
             
             <div class="text-center mb-6">
                 <h1 class="text-xl sm:text-2xl font-bold tracking-wider text-blue-400 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bell text-amber-400 yellow-bell-glow"></i> AGENDA PRO <span class="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full font-normal">Depósito Central</span>
+                    <i class="fa-solid fa-bell text-amber-400 yellow-bell-glow"></i> AGENDA PRO <span class="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full font-normal">Corporativa</span>
                 </h1>
-                <p class="text-xs sm:text-sm text-slate-400 mt-1">Plataforma Corporativa Multiusuario</p>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1">Plataforma Multiusuario en Tiempo Real</p>
             </div>
 
             <div class="flex border-b border-slate-800 mb-6">
@@ -187,7 +187,6 @@
                                     <input type="checkbox" id="event-alarm-enabled" checked class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0"> Activar Alarma Flotante
                                 </label>
                             </div>
-                            <!-- CHECKBOX: INCLUIR MI USUARIO EN ALERTA GENERAL -->
                             <div class="flex items-center justify-between">
                                 <label class="text-xs font-medium text-amber-300 flex items-center gap-1.5">
                                     <input type="checkbox" id="event-include-admin" checked class="rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-0"> Incluir mi usuario en la alarma
@@ -301,7 +300,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[11px] text-slate-400 mb-1">Correo del Usuario</label>
-                            <input type="email" id="new-user-email" required class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="sucursal@deportshow.com">
+                            <input type="email" id="new-user-email" required class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500" placeholder="sucursal@empresa.com">
                         </div>
                         <div>
                             <label class="block text-[11px] text-slate-400 mb-1">Contraseña (Mín. 6 caracteres)</label>
@@ -335,11 +334,11 @@
         </div>
     </div>
 
-    <!-- MODAL DE CHAT INTERNO -->
+    <!-- MODAL DE CHAT INTERNO (CON SOPORTE DE AUDIO) -->
     <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full h-[92vh] sm:h-[85vh] shadow-2xl flex flex-col overflow-hidden">
             <div class="bg-slate-950 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
-                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-comments text-blue-400"></i> Chat Interno</h3>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-comments text-blue-400"></i> Chat Interno & Notas de Voz</h3>
                 <div class="flex items-center gap-1.5 sm:gap-2">
                     <button onclick="exportChatHistory()" class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold transition flex items-center gap-1" title="Exportar Historial">
                         <i class="fa-solid fa-file-arrow-down"></i> <span class="hidden sm:inline">Exportar</span>
@@ -357,8 +356,13 @@
                 </select>
             </div>
             <div id="chat-messages-container" class="flex-1 p-4 sm:p-6 space-y-3 overflow-y-auto bg-slate-950/50"></div>
-            <form onsubmit="sendChatMessage(event)" class="p-3 sm:p-4 bg-slate-950 border-t border-slate-800 flex gap-2 sm:gap-3">
-                <input type="text" id="chat-input-text" required placeholder="Escribe un mensaje..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 text-xs focus:outline-none focus:border-blue-500 text-slate-200">
+            
+            <!-- BARRA DE ENVÍO TEXTO Y AUDIO -->
+            <form onsubmit="sendChatMessage(event)" class="p-3 sm:p-4 bg-slate-950 border-t border-slate-800 flex items-center gap-2 sm:gap-3">
+                <input type="text" id="chat-input-text" placeholder="Escribe un mensaje..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 sm:px-4 py-2.5 text-xs focus:outline-none focus:border-blue-500 text-slate-200">
+                <button type="button" id="btn-record-audio" onclick="toggleAudioRecording()" title="Grabar audio" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2.5 rounded-xl transition text-xs flex items-center gap-1">
+                    <i id="record-icon" class="fa-solid fa-microphone text-amber-400"></i>
+                </button>
                 <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 sm:px-6 py-2.5 rounded-xl text-xs font-semibold transition whitespace-nowrap">Enviar</button>
             </form>
         </div>
@@ -378,9 +382,9 @@
         </div>
     </div>
 
-    <!-- POPUP FLOTANTE DE ALARMA (BLOQUEANTE SI ES ROJA) -->
+    <!-- POPUP FLOTANTE DE ALARMA (CON CAMPO DE APODO / NOMBRE) -->
     <div id="alarm-popup" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl alarm-overlay-glow text-center space-y-5 sm:space-y-6">
+        <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl alarm-overlay-glow text-center space-y-4 sm:space-y-5">
             <div class="inline-block text-amber-400 text-5xl sm:text-6xl bell-swing yellow-bell-glow">
                 <i class="fa-solid fa-bell"></i>
             </div>
@@ -392,6 +396,12 @@
                 <p class="text-xs text-slate-400 font-semibold uppercase">Detalle:</p>
                 <p id="alarm-popup-desc" class="text-xs sm:text-sm text-slate-200">--</p>
             </div>
+            
+            <div class="text-left space-y-1">
+                <label class="block text-[11px] font-semibold text-amber-300 uppercase tracking-wider">Tu Nombre / Apodo (Para registro en reporte):</label>
+                <input type="text" id="alarm-user-nickname" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-400" placeholder="Ej: Juan (Sucursal Norte)">
+            </div>
+
             <div class="space-y-2">
                 <button onclick="confirmAlarmRead()" class="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition text-xs tracking-wider uppercase shadow-lg shadow-emerald-600/40 text-white flex items-center justify-center gap-2">
                     <i class="fa-solid fa-check-double"></i> Confirmar Lectura Obligatoria
@@ -454,6 +464,126 @@
         };
 
         const MASTER_ADMIN_EMAIL = "simongeorge1st@gmail.com";
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        window.toggleAudioRecording = async function() {
+            const btn = document.getElementById('btn-record-audio');
+            const icon = document.getElementById('record-icon');
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            const base64Audio = reader.result;
+                            sendAudioMessage(base64Audio);
+                        };
+                        // Detener permisos de micro
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btn.classList.add('bg-red-600/30', 'border', 'border-red-500');
+                    icon.className = "fa-solid fa-stop text-red-400 animate-pulse";
+                    showToast("🎙️ Grabando nota de voz...");
+                } catch (err) {
+                    alert("No se pudo acceder al micrófono: " + err.message);
+                }
+            } else {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                isRecording = false;
+                btn.classList.remove('bg-red-600/30', 'border', 'border-red-500');
+                icon.className = "fa-solid fa-microphone text-amber-400";
+            }
+        };
+
+        function sendAudioMessage(audioBase64) {
+            const recipient = document.getElementById('chat-target-recipient').value;
+            window.appState.chatMessages.push({
+                id: 'msg_' + Date.now(),
+                sender: window.currentUser.email,
+                recipient: recipient,
+                type: 'audio',
+                audioData: audioBase64,
+                timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
+                fullDate: new Date().toISOString(),
+                readBy: [window.currentUser.email.toLowerCase()]
+            });
+            saveGlobalData();
+            renderChatMessages();
+            updateBadgeCounter();
+            showToast("Nota de voz enviada");
+        }
+
+        function formatMessageDate(isoString) {
+            if (!isoString) return '';
+            const msgDate = new Date(isoString);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (msgDate.toDateString() === today.toDateString()) {
+                return 'Hoy';
+            } else if (msgDate.toDateString() === yesterday.toDateString()) {
+                return 'Ayer';
+            } else {
+                return msgDate.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+        }
+
+        function updateBadgeCounter() {
+            try {
+                if (!navigator.setAppBadge) return;
+                let unreadChatCount = 0;
+                if (window.currentUser) {
+                    const myEmail = window.currentUser.email.toLowerCase();
+                    window.appState.chatMessages.forEach(msg => {
+                        if (msg.sender.toLowerCase() !== myEmail && (msg.recipient === 'TODOS' || msg.recipient === window.appState.usersPermissions[myEmail]?.sector)) {
+                            if (!msg.readBy || !msg.readBy.includes(myEmail)) {
+                                unreadChatCount++;
+                            }
+                        }
+                    });
+                }
+                
+                let activeAlarmCount = 0;
+                const now = new Date();
+                const timeStr = now.toTimeString().split(' ')[0].substring(0,5);
+                const dateStr = now.toISOString().split('T')[0];
+
+                window.appState.events.forEach(ev => {
+                    if (ev.alarmEnabled && ev.date === dateStr) {
+                        const myEmail = window.currentUser ? window.currentUser.email.toLowerCase() : '';
+                        if (myEmail && ev.triggeredUsers && !ev.triggeredUsers.includes(myEmail)) {
+                            activeAlarmCount++;
+                        }
+                    }
+                });
+
+                const totalBadge = unreadChatCount + activeAlarmCount;
+                if (totalBadge > 0) {
+                    navigator.setAppBadge(totalBadge).catch(err => {});
+                } else {
+                    navigator.clearAppBadge().catch(err => {});
+                }
+            } catch(e) {}
+        }
 
         function playWindowsStartupChime() {
             try {
@@ -657,6 +787,7 @@
                 renderCalendar();
                 renderChatMessages();
                 renderTimers();
+                updateBadgeCounter();
                 if(window.currentUser) {
                     const emailLower = window.currentUser.email.toLowerCase();
                     const userPerm = window.appState.usersPermissions[emailLower];
@@ -678,6 +809,7 @@
                 renderCalendar();
                 renderChatMessages();
                 renderTimers();
+                updateBadgeCounter();
             });
         }
 
@@ -931,6 +1063,22 @@
         window.openChatModal = () => {
             document.getElementById('chat-modal').classList.remove('hidden');
             document.getElementById('chat-badge').classList.add('hidden');
+            
+            if(window.currentUser) {
+                const myEmail = window.currentUser.email.toLowerCase();
+                let modified = false;
+                window.appState.chatMessages.forEach(msg => {
+                    if(!msg.readBy) msg.readBy = [];
+                    if(!msg.readBy.includes(myEmail)) {
+                        msg.readBy.push(myEmail);
+                        modified = true;
+                    }
+                });
+                if(modified) {
+                    saveGlobalData();
+                }
+            }
+            updateBadgeCounter();
         };
         window.closeChatModal = () => document.getElementById('chat-modal').classList.add('hidden');
 
@@ -943,6 +1091,7 @@
                 btnChat.classList.add('animate-bounce');
                 setTimeout(() => btnChat.classList.remove('animate-bounce'), 5000);
             }
+            updateBadgeCounter();
         }
 
         window.ringMessageBell = function(msgId) {
@@ -953,9 +1102,11 @@
 
         window.exportChatHistory = function() {
             if(window.appState.chatMessages.length === 0) { alert("No hay mensajes."); return; }
-            let csvContent = "data:text/csv;charset=utf-8,Remitente,Destinatario,Hora,Mensaje\n";
+            let csvContent = "data:text/csv;charset=utf-8,Remitente,Destinatario,Fecha,Hora,Tipo,Mensaje\n";
             window.appState.chatMessages.forEach(msg => {
-                csvContent += `"${msg.sender}","${msg.recipient}","${msg.timestamp}","${msg.text.replace(/"/g, '""')}"\n`;
+                const fDate = formatMessageDate(msg.fullDate);
+                const content = msg.type === 'audio' ? '[Nota de Voz]' : (msg.text || '').replace(/"/g, '""');
+                csvContent += `"${msg.sender}","${msg.recipient}","${fDate}","${msg.timestamp}","${msg.type || 'text'}","${content}"\n`;
             });
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csvContent));
@@ -973,6 +1124,7 @@
                 window.appState.chatMessages = [];
                 saveGlobalData();
                 renderChatMessages();
+                updateBadgeCounter();
                 showToast("Chat borrado");
             }
         };
@@ -988,13 +1140,16 @@
                 id: 'msg_' + Date.now(),
                 sender: window.currentUser.email,
                 recipient: recipient,
+                type: 'text',
                 text: text,
                 timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
-                read: false
+                fullDate: new Date().toISOString(),
+                readBy: [window.currentUser.email.toLowerCase()]
             });
             input.value = '';
             saveGlobalData();
             renderChatMessages();
+            updateBadgeCounter();
         };
 
         window.renderChatMessages = function() {
@@ -1008,16 +1163,29 @@
                 const isMe = msg.sender.toLowerCase() === window.currentUser.email.toLowerCase();
                 const recipientLabel = msg.recipient === 'TODOS' ? '🌐 Grupo General' : `🏢 Para: ${msg.recipient}`;
                 const checkIcon = isMe ? `<i class="fa-solid fa-check-double text-emerald-400 ml-1" title="Entregado"></i>` : '';
+                const dateLabel = formatMessageDate(msg.fullDate);
+
+                let bodyContent = '';
+                if(msg.type === 'audio') {
+                    bodyContent = `
+                        <div class="flex items-center gap-2">
+                            <audio controls src="${msg.audioData}" class="h-8 max-w-[200px] sm:max-w-[240px]"></audio>
+                        </div>
+                    `;
+                } else {
+                    bodyContent = `<div>${msg.text}</div>`;
+                }
+
                 container.innerHTML += `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1">
                         <div class="flex items-center gap-2 text-[10px] text-slate-400">
                             <span class="font-bold text-slate-300">${msg.sender}</span>
                             <span class="bg-slate-900 px-2 py-0.5 rounded text-amber-300 border border-slate-800">${recipientLabel}</span>
-                            <span>${msg.timestamp}</span> ${checkIcon}
+                            <span class="text-amber-400/80 font-medium">${dateLabel} - ${msg.timestamp}</span> ${checkIcon}
                             <button onclick="ringMessageBell('${msg.id}')" title="Campanita" class="text-amber-400 hover:text-amber-300 px-1 py-0.5"><i class="fa-solid fa-bell"></i></button>
                         </div>
                         <div class="max-w-[85%] sm:max-w-[80%] bg-slate-900 border ${isMe ? 'border-blue-500/40 text-slate-100' : 'border-slate-800 text-slate-200'} p-3 rounded-2xl text-xs shadow">
-                            ${msg.text}
+                            ${bodyContent}
                         </div>
                     </div>
                 `;
@@ -1111,8 +1279,10 @@
             let confHtml = '';
             if(ev.confirmations && Object.keys(ev.confirmations).length > 0) {
                 confHtml = `<div class="space-y-1 mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800"><p class="font-bold text-emerald-400 mb-1">Confirmaciones:</p>`;
-                for(let [sec, time] of Object.entries(ev.confirmations)) {
-                    confHtml += `<div class="flex justify-between text-[11px] text-slate-300"><span>🏢 ${sec}</span> <span class="text-amber-400 font-mono">${time}</span></div>`;
+                for(let [sec, data] of Object.entries(ev.confirmations)) {
+                    const timeStr = typeof data === 'object' ? data.time : data;
+                    const nicknameStr = (typeof data === 'object' && data.nickname) ? ` <span class="text-blue-300 font-semibold">(${data.nickname})</span>` : '';
+                    confHtml += `<div class="flex justify-between text-[11px] text-slate-300"><span>🏢 ${sec}${nicknameStr}</span> <span class="text-amber-400 font-mono">${timeStr}</span></div>`;
                 }
                 confHtml += `</div>`;
             } else { confHtml = `<div class="mt-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-slate-400 text-center italic">Sin confirmaciones todavía.</div>`; }
@@ -1186,7 +1356,11 @@
 
             let csvContent = "data:text/csv;charset=utf-8,Fecha,Hora,Destino,Prioridad,Título,Contenido,Confirmaciones\n";
             monthEvents.forEach(ev => {
-                const confs = ev.confirmations ? Object.entries(ev.confirmations).map(([k,v]) => `${k}: ${v}`).join(' | ') : 'Sin confirmaciones';
+                const confs = ev.confirmations ? Object.entries(ev.confirmations).map(([k,v]) => {
+                    const t = typeof v === 'object' ? v.time : v;
+                    const nick = (typeof v === 'object' && v.nickname) ? ` [Apodo: ${v.nickname}]` : '';
+                    return `${k}${nick}: ${t}`;
+                }).join(' | ') : 'Sin confirmaciones';
                 csvContent += `"${ev.date}","${ev.time}","${ev.sector}","${ev.priority}","${ev.title.replace(/"/g, '""')}","${(ev.desc || '').replace(/"/g, '""')}","${confs}"\n`;
             });
             const link = document.createElement("a");
@@ -1234,6 +1408,7 @@
         window.deleteTimer = (idx) => { window.appState.timers.splice(idx, 1); saveGlobalData(); renderTimers(); };
         function formatTimeDisplay(secs) { return `${String(Math.floor(secs / 60)).padStart(2,'0')}:${String(secs % 60).padStart(2,'0')}`; }
 
+        // BUCLE PRINCIPAL DE RELOJ Y ALARMAS (ANTISUSPENSIÓN ACTIVO)
         setInterval(() => {
             const now = new Date();
             const timeStr = now.toTimeString().split(' ')[0];
@@ -1261,8 +1436,6 @@
                 }
 
                 const userEmail = window.currentUser.email.toLowerCase();
-                
-                // Si este usuario ya hizo sonar esta alarma, pasamos
                 if (ev.triggeredUsers.includes(userEmail)) return;
 
                 const userSector = window.appState.usersPermissions[userEmail]?.sector || '';
@@ -1281,7 +1454,6 @@
                 }
 
                 if (ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
-                    // Marcar que este usuario específico ya disparó su alarma
                     ev.triggeredUsers.push(userEmail);
                     saveGlobalData();
 
@@ -1291,6 +1463,7 @@
                     document.getElementById('alarm-popup-title').innerText = `¡AVISO: ${ev.title}!`;
                     document.getElementById('alarm-popup-target').innerText = `Destino: ${ev.sector}`;
                     document.getElementById('alarm-popup-desc').innerText = ev.desc || 'Sin detalles.';
+                    document.getElementById('alarm-user-nickname').value = userSector || '';
                     
                     const snoozeContainer = document.getElementById('alarm-snooze-container');
                     if(ev.priority === 'red') {
@@ -1302,21 +1475,29 @@
                     document.getElementById('alarm-popup').classList.remove('hidden');
                     playAlarmSound();
                     renderCalendar();
+                    updateBadgeCounter();
                 }
             });
         }, 1000);
 
         window.confirmAlarmRead = function() {
+            const nickname = document.getElementById('alarm-user-nickname').value.trim() || 'Sin apodo';
             document.getElementById('alarm-popup').classList.add('hidden');
             const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
             if(ev) {
                 if(!ev.confirmations) ev.confirmations = {};
                 const userSector = window.isAdmin ? 'Superadmin (Depósito Central)' : (window.appState.usersPermissions[window.currentUser.email]?.sector || 'Sucursal');
                 const timeString = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + new Date().toLocaleDateString('es-AR') + ')';
-                ev.confirmations[userSector] = timeString;
+                
+                ev.confirmations[userSector] = {
+                    time: timeString,
+                    nickname: nickname
+                };
+
                 saveGlobalData();
                 renderCalendar();
-                showToast("¡Lectura confirmada y registrada!");
+                updateBadgeCounter();
+                showToast("¡Lectura confirmada y registrada con apodo!");
             }
         };
 
@@ -1326,7 +1507,7 @@
             document.getElementById('alarm-popup').classList.add('hidden');
             const now = new Date();
             now.setMinutes(now.getMinutes() + 5);
-            if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggeredUsers = []; saveGlobalData(); renderCalendar(); }
+            if(ev) { ev.date = now.toISOString().split('T')[0]; ev.time = now.toTimeString().split(' ')[0].substring(0,5); ev.triggeredUsers = []; saveGlobalData(); renderCalendar(); updateBadgeCounter(); }
             showToast("Pospuesto 5 minutos");
         };
 
@@ -1334,7 +1515,7 @@
             const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
             if(ev && ev.priority === 'red') { alert("Este aviso es de prioridad URGENTE y requiere confirmación obligatoria."); return; }
             document.getElementById('alarm-popup').classList.add('hidden');
-            if(ev) { ev.alarmEnabled = false; saveGlobalData(); renderCalendar(); }
+            if(ev) { ev.alarmEnabled = false; saveGlobalData(); renderCalendar(); updateBadgeCounter(); }
             showToast("Aviso cerrado");
         };
 
