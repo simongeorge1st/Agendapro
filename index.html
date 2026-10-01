@@ -13,7 +13,7 @@
     <!-- Google Fonts estilo Retro / Moderno -->
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Favicon Campana Dorada Perfecta -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230f172a'/%3E%3Cpath fill='%23fbbf24' d='M256 64c-53 0-96 43-96 96v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8h239.6c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V160c0-53-43-96-96-96zm0 384c35.3 0 64-28.7 64-64H192c0 35.3 28.7 64 64 64 z'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230f172a'/%3E%3Cpath fill='%23fbbf24' d='M256 64c-53 0-96 43-96 96v38.4c0 32.7-12.7 64.2-35.4 87.8l-8.7 9c-17.8 18.3-4.9 48.8 20.2 48.8h239.6c25.1 0 38-30.5 20.2-48.8l-8.7-9c-22.7-23.6-35.4-55.1-35.4-87.8V160c0-53-43-96-96-96zm0 384c35.3 0 64-28.7 64-64H192c0 35.3 28.7 64 64 64z'/%3E%3C/svg%3E">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .retro-clock { font-family: 'Share Tech Mono', monospace; }
@@ -334,7 +334,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CHAT INTERNO (CON SOPORTE DE AUDIO) -->
+    <!-- MODAL DE CHAT INTERNO (CON SOPORTE DE AUDIO Y RE-ALERTA SINCRONIZADA) -->
     <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full h-[92vh] sm:h-[85vh] shadow-2xl flex flex-col overflow-hidden">
             <div class="bg-slate-950 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
@@ -491,7 +491,6 @@
                             const base64Audio = reader.result;
                             sendAudioMessage(base64Audio);
                         };
-                        // Detener permisos de micro
                         stream.getTracks().forEach(track => track.stop());
                     };
 
@@ -523,7 +522,8 @@
                 audioData: audioBase64,
                 timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
                 fullDate: new Date().toISOString(),
-                readBy: [window.currentUser.email.toLowerCase()]
+                readBy: [window.currentUser.email.toLowerCase()],
+                ringTimestamp: null
             });
             saveGlobalData();
             renderChatMessages();
@@ -761,6 +761,8 @@
 
         window.handleLogout = async function() { await signOut(auth); showToast("Sesión cerrada"); };
 
+        let lastProcessedRingTimestamp = 0;
+
         function loadGlobalData() {
             const docRef = doc(db, "enterprise_data", "main_workspace");
             onSnapshot(docRef, (docSnap) => {
@@ -773,6 +775,22 @@
                     if(data.usersPermissions) { window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions }; }
                     if(data.chatMessages) {
                         const newMessages = data.chatMessages;
+                        
+                        // Verificar si algún mensaje nuevo o si alguien tocó la campanita (ringTimestamp)
+                        newMessages.forEach(msg => {
+                            if (msg.ringTimestamp && msg.ringTimestamp > lastProcessedRingTimestamp) {
+                                lastProcessedRingTimestamp = msg.ringTimestamp;
+                                if (window.currentUser) {
+                                    const myEmail = window.currentUser.email.toLowerCase();
+                                    const mySector = window.appState.usersPermissions[myEmail]?.sector || '';
+                                    const isTargetForMe = (msg.recipient === 'TODOS' || msg.recipient === mySector || msg.sender.toLowerCase() === myEmail);
+                                    if (isTargetForMe) {
+                                        triggerChatAlertUI();
+                                    }
+                                }
+                            }
+                        });
+
                         if(newMessages.length > previousChatLength && previousChatLength > 0) {
                             const lastMsg = newMessages[newMessages.length - 1];
                             if(window.currentUser && lastMsg.sender.toLowerCase() !== window.currentUser.email.toLowerCase()) {
@@ -1094,10 +1112,16 @@
             updateBadgeCounter();
         }
 
+        // FUNCIÓN DE LA CAMPANA SINCRONIZADA EN LA NUBE
         window.ringMessageBell = function(msgId) {
+            const msg = window.appState.chatMessages.find(m => m.id === msgId);
+            if (msg) {
+                msg.ringTimestamp = Date.now();
+                saveGlobalData();
+            }
             playChatBellSound();
             triggerChatAlertUI();
-            showToast("🔔 ¡Alerta enviada!");
+            showToast("🔔 ¡Alerta reenviada a destino!");
         };
 
         window.exportChatHistory = function() {
@@ -1144,7 +1168,8 @@
                 text: text,
                 timestamp: new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }),
                 fullDate: new Date().toISOString(),
-                readBy: [window.currentUser.email.toLowerCase()]
+                readBy: [window.currentUser.email.toLowerCase()],
+                ringTimestamp: null
             });
             input.value = '';
             saveGlobalData();
@@ -1182,7 +1207,7 @@
                             <span class="font-bold text-slate-300">${msg.sender}</span>
                             <span class="bg-slate-900 px-2 py-0.5 rounded text-amber-300 border border-slate-800">${recipientLabel}</span>
                             <span class="text-amber-400/80 font-medium">${dateLabel} - ${msg.timestamp}</span> ${checkIcon}
-                            <button onclick="ringMessageBell('${msg.id}')" title="Campanita" class="text-amber-400 hover:text-amber-300 px-1 py-0.5"><i class="fa-solid fa-bell"></i></button>
+                            <button onclick="ringMessageBell('${msg.id}')" title="Reenviar Alerta" class="text-amber-400 hover:text-amber-300 px-1 py-0.5"><i class="fa-solid fa-bell"></i></button>
                         </div>
                         <div class="max-w-[85%] sm:max-w-[80%] bg-slate-900 border ${isMe ? 'border-blue-500/40 text-slate-100' : 'border-slate-800 text-slate-200'} p-3 rounded-2xl text-xs shadow">
                             ${bodyContent}
