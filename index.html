@@ -1466,7 +1466,6 @@
             document.getElementById('mini-clock-time').innerText = timeStr;
             document.getElementById('mini-clock-date').innerText = now.toLocaleDateString('es-AR', { month: 'short', day: 'numeric' });
 
-            // Actualizar cronómetros y temporizadores activos en segundo plano
             let timersUpdated = false;
             window.appState.timers.forEach((t) => {
                 if(t.running) {
@@ -1484,7 +1483,6 @@
                 }
             });
 
-            // Si hay cronómetros corriendo, actualizar la vista del modal si está abierto
             if(timersUpdated && !document.getElementById('timers-modal').classList.contains('hidden')) {
                 renderTimers();
             }
