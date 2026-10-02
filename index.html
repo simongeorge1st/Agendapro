@@ -82,10 +82,10 @@
                     <input type="password" id="reg-password" required minlength="6" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition" placeholder="••••••••">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Nombre de la Empresa / Organización</label>
-                    <input type="text" id="reg-company" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition text-amber-300 font-semibold" placeholder="Ej: DeportShow o Mi Empresa">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Nombre de tu Empresa</label>
+                    <input type="text" id="reg-company" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition text-amber-300 font-semibold" placeholder="Ej: Simotool">
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 font-semibold py-2.5 rounded-lg transition shadow-lg shadow-emerald-600/30">Crear Cuenta y Empresa</button>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 font-semibold py-2.5 rounded-lg transition shadow-lg shadow-emerald-600/30">Registrar Nueva Empresa</button>
             </form>
         </div>
     </div>
@@ -104,7 +104,7 @@
                         <h1 class="text-base sm:text-lg font-bold tracking-wide flex items-center gap-2">
                             AGENDA PRO <span id="user-role-badge" class="text-[9px] sm:text-[10px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-normal">Sucursal</span>
                         </h1>
-                        <p class="text-[11px] sm:text-xs text-slate-400 truncate max-w-[200px] sm:max-w-none">Empresa: <span id="company-display-name" class="text-amber-400 font-bold">--</span> | Usuario: <span id="user-display-email" class="text-emerald-400 font-medium">--</span></p>
+                        <p class="text-[11px] sm:text-xs text-slate-400 truncate max-w-[200px] sm:max-w-none">Empresa: <span id="company-display-name" class="text-amber-400 font-bold">DEPORTSHOW</span> | Usuario: <span id="user-display-email" class="text-emerald-400 font-medium">--</span></p>
                     </div>
                 </div>
             </div>
@@ -281,26 +281,22 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURACIÓN Y PANEL ADMIN / MULTIEMPRESA -->
+    <!-- MODAL DE CONFIGURACIÓN Y PANEL ADMIN -->
     <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> Panel de Superadministración & Empresas</h3>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> Panel de Administración / Multiempresa</h3>
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <!-- SECCIÓN MAESTRA SUPERADMIN (SOLO PARA SIMÓN) -->
-            <div id="superadmin-company-selector-section" class="space-y-3 bg-slate-950 p-4 rounded-xl border border-blue-500/30 hidden">
-                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">👑 Panel Global Multiempresa</h4>
-                <p class="text-[11px] text-slate-400">Selecciona o cambia de empresa activa para administrar su espacio corporativo de forma aislada:</p>
-                <div class="flex gap-2">
-                    <select id="master-company-select" onchange="switchActiveCompany(this.value)" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-amber-300 font-semibold"></select>
-                    <button onclick="createNewEnterprise()" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap">+ Nueva Empresa</button>
-                </div>
+            <!-- SELECTOR MAESTRO (SOLO PARA SIMÓN) -->
+            <div id="superadmin-selector-box" class="space-y-2 bg-slate-950 p-3 rounded-xl border border-blue-500/30 hidden">
+                <label class="block text-[11px] font-bold text-blue-400 uppercase tracking-wider">👑 Cambiar de Empresa (Superadmin Global):</label>
+                <select id="master-company-selector" onchange="switchCompanyAdmin(this.value)" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-amber-300 font-semibold"></select>
             </div>
 
             <div id="admin-sectors-section" class="space-y-3">
-                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">1. Gestión de Unidades de Negocio / Sucursales de esta Empresa</h4>
+                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider">1. Gestión de Unidades de Negocio / Sucursales</h4>
                 <form onsubmit="addSector(event)" class="flex gap-2">
                     <input type="text" id="new-sector-name" required placeholder="Nombre nueva sucursal..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap">Crear Sucursal</button>
@@ -459,14 +455,11 @@
 
         window.currentUser = null;
         window.isAdmin = false;
-        window.activeCompany = 'deportshow'; // Empresa por defecto para mantener intacto a Deport Show
+        window.activeCompany = 'deportshow';
         window.appState = {
             events: [],
-            sectors: ['Depósito Central', 'Sucursal Norte', 'Sucursal Sur', 'Administración', 'Distribución'],
-            usersPermissions: {
-                "deportshowonline@gmail.com": { sector: "E-commerce ML", role: "branch", password: "••••", export: true, timers: true },
-                "pedidoslocalesdeporshow@gmail.com": { sector: "E-commerce ML", role: "branch", password: "••••", export: true, timers: true }
-            }, 
+            sectors: ['Depósito Central', 'Sucursal Principal', 'Administración'],
+            usersPermissions: {}, 
             chatMessages: [],
             timers: [],
             clockType: 'digital',
@@ -646,29 +639,39 @@
                 const emailLower = user.email.toLowerCase();
                 window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL);
 
-                // Cargar perfil de usuario o asignar empresa por defecto
+                // Buscar o registrar la empresa del usuario
                 const userDocRef = doc(db, "users_directory", emailLower);
                 const userSnap = await getDoc(userDocRef);
+                
+                let userCompany = 'deportshow';
+                let isCompanyAdmin = window.isAdmin;
+
                 if (userSnap.exists()) {
-                    window.activeCompany = userSnap.data().company || 'deportshow';
+                    userCompany = userSnap.data().company || 'deportshow';
+                    isCompanyAdmin = window.isAdmin || (userSnap.data().role === 'admin');
                 } else {
-                    window.activeCompany = window.isAdmin ? 'deportshow' : (emailLower.split('@')[0].replace(/[^a-z0-9]/g, '') || 'deportshow');
-                    await setDoc(userDocRef, { email: emailLower, company: window.activeCompany }, { merge: true });
+                    // Si se registró por su cuenta, su correo define su empresa y es Administrador de ella
+                    userCompany = emailLower.split('@')[0].replace(/[^a-z0-9]/g, '_');
+                    isCompanyAdmin = true;
+                    await setDoc(userDocRef, { email: emailLower, company: userCompany, role: 'admin' });
                 }
+
+                window.activeCompany = userCompany;
+                window.isCompanyAdmin = isCompanyAdmin;
 
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('user-display-email').innerText = user.email;
                 document.getElementById('company-display-name').innerText = window.activeCompany.toUpperCase();
-                document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadministrador' : '🏢 Sucursal';
+                document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadmin Global' : (window.isCompanyAdmin ? '👑 Admin Empresa' : '🏢 Sucursal');
 
                 const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
-                if(window.isAdmin) btnClearChatAdmin.classList.remove('hidden'); else btnClearChatAdmin.classList.add('hidden');
+                if(window.isCompanyAdmin || window.isAdmin) btnClearChatAdmin.classList.remove('hidden'); else btnClearChatAdmin.classList.add('hidden');
 
                 applyUserPermissions(user.email);
                 playWindowsStartupChime();
                 loadCompaniesListAndData();
-                showToast(window.isAdmin ? "Sesión iniciada como Superadministrador Global" : `Sesión iniciada en ${window.activeCompany.toUpperCase()}`);
+                showToast(`Sesión iniciada en ${window.activeCompany.toUpperCase()}`);
             } else {
                 window.currentUser = null;
                 document.getElementById('auth-screen').classList.remove('hidden');
@@ -680,26 +683,26 @@
             const settingsBtnText = document.getElementById('settings-btn-text');
             const adminSectors = document.getElementById('admin-sectors-section');
             const adminUsers = document.getElementById('admin-users-section');
-            const superadminSelector = document.getElementById('superadmin-company-selector-section');
+            const superadminSelector = document.getElementById('superadmin-selector-box');
             const btnExport = document.getElementById('btn-export');
             const btnTimers = document.getElementById('btn-timers');
 
-            if(window.isAdmin) {
+            if(window.isCompanyAdmin || window.isAdmin) {
                 settingsBtnText.innerText = "Panel Admin";
                 adminSectors.classList.remove('hidden');
                 adminUsers.classList.remove('hidden');
-                superadminSelector.classList.remove('hidden');
                 btnExport.classList.remove('hidden');
                 btnTimers.classList.remove('hidden');
             } else {
                 settingsBtnText.innerText = "Configurar";
                 adminSectors.classList.add('hidden');
                 adminUsers.classList.add('hidden');
+            }
+
+            if(window.isAdmin) {
+                superadminSelector.classList.remove('hidden');
+            } else {
                 superadminSelector.classList.add('hidden');
-                const emailLower = email.toLowerCase();
-                const perms = window.appState.usersPermissions[emailLower] || { export: true, timers: true };
-                if(perms.export) btnExport.classList.remove('hidden'); else btnExport.classList.add('hidden');
-                if(perms.timers) btnTimers.classList.remove('hidden'); else btnTimers.classList.add('hidden');
             }
         }
 
@@ -728,11 +731,21 @@
             e.preventDefault();
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const pass = document.getElementById('reg-password').value;
-            const companyName = document.getElementById('reg-company').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+            const companyInput = document.getElementById('reg-company').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
             try {
                 await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users_directory", email), { email, company: companyName });
-                showToast("Cuenta y empresa creadas con éxito");
+                await setDoc(doc(db, "users_directory", email), { email, company: companyInput, role: 'admin' });
+                
+                // Registrar empresa en el registro maestro
+                const masterRef = doc(db, "saas_meta", "companies_registry");
+                const masterSnap = await getDoc(masterRef);
+                let list = masterSnap.exists() ? (masterSnap.data().list || ['deportshow']) : ['deportshow'];
+                if(!list.includes(companyInput)) {
+                    list.push(companyInput);
+                    await setDoc(masterRef, { list });
+                }
+
+                showToast("¡Empresa y cuenta de Administrador creadas con éxito!");
             } catch (err) { alert("Error al registrar: " + err.message); }
         };
 
@@ -747,31 +760,26 @@
         let lastProcessedRingTimestamp = 0;
 
         async function loadCompaniesListAndData() {
-            // Cargar lista de empresas disponibles para el superadmin
             if (window.isAdmin) {
                 const masterRef = doc(db, "saas_meta", "companies_registry");
                 const masterSnap = await getDoc(masterRef);
                 let companiesList = ['deportshow'];
                 if (masterSnap.exists()) {
                     companiesList = masterSnap.data().list || ['deportshow'];
-                } else {
-                    await setDoc(masterRef, { list: ['deportshow'] });
                 }
-
-                const selectMaster = document.getElementById('master-company-select');
+                const selectMaster = document.getElementById('master-company-selector');
                 selectMaster.innerHTML = '';
                 companiesList.forEach(comp => {
                     selectMaster.innerHTML += `<option value="${comp}" ${comp === window.activeCompany ? 'selected' : ''}>🏢 ${comp.toUpperCase()}</option>`;
                 });
             }
-
             subscribeToActiveCompanyData();
         }
 
         function subscribeToActiveCompanyData() {
             if (unsubscribeActiveCompany) unsubscribeActiveCompany();
 
-            // Ruta aislada por empresa en Firestore (mantiene intacto main_workspace para Deport Show)
+            // Deport Show usa "main_workspace", las demás empresas usan su propio documento aislado
             const docPath = window.activeCompany === 'deportshow' ? "main_workspace" : `enterprise_data_${window.activeCompany}`;
             const docRef = doc(db, "enterprise_data", docPath);
 
@@ -780,9 +788,11 @@
                     const data = docSnap.data();
                     let previousChatLength = window.appState.chatMessages.length;
                     
-                    if(data.events) window.appState.events = data.events;
-                    if(data.sectors) window.appState.sectors = data.sectors;
-                    if(data.usersPermissions) { window.appState.usersPermissions = { ...window.appState.usersPermissions, ...data.usersPermissions }; }
+                    window.appState.events = data.events || [];
+                    window.appState.sectors = data.sectors || ['Depósito Central', 'Sucursal Principal', 'Administración'];
+                    window.appState.usersPermissions = data.usersPermissions || {};
+                    window.appState.timers = data.timers || [];
+                    
                     if(data.chatMessages) {
                         const newMessages = data.chatMessages;
                         newMessages.forEach(msg => {
@@ -806,8 +816,9 @@
                         }
                         window.appState.chatMessages = newMessages;
                     }
-                    if(data.timers) window.appState.timers = data.timers;
-                } else { saveGlobalData(); }
+                } else { 
+                    saveGlobalData(); 
+                }
 
                 document.getElementById('company-display-name').innerText = window.activeCompany.toUpperCase();
                 updateSectorsUI();
@@ -824,41 +835,10 @@
             });
         }
 
-        window.switchActiveCompany = function(companyId) {
+        window.switchCompanyAdmin = function(companyId) {
             window.activeCompany = companyId;
             showToast(`Cambiando a empresa: ${companyId.toUpperCase()}`);
             subscribeToActiveCompanyData();
-        };
-
-        window.createNewEnterprise = async function() {
-            const newName = prompt("Ingrese el nombre de la nueva empresa (sin espacios ni caracteres raros):", "empresa_nueva");
-            if (!newName) return;
-            const formatted = newName.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
-            
-            const masterRef = doc(db, "saas_meta", "companies_registry");
-            const masterSnap = await getDoc(masterRef);
-            let list = masterSnap.exists() ? (masterSnap.data().list || ['deportshow']) : ['deportshow'];
-            
-            if (!list.includes(formatted)) {
-                list.push(formatted);
-                await setDoc(masterRef, { list });
-                
-                // Inicializar datos iniciales para la nueva empresa
-                const newDocRef = doc(db, "enterprise_data", `enterprise_data_${formatted}`);
-                await setDoc(newDocRef, {
-                    events: [],
-                    sectors: ['Depósito Central', 'Sucursal Principal', 'Administración'],
-                    usersPermissions: {},
-                    chatMessages: [],
-                    timers: []
-                });
-
-                showToast(`Empresa "${formatted}" creada con éxito`);
-                loadCompaniesListAndData();
-                switchActiveCompany(formatted);
-            } else {
-                alert("La empresa ya existe.");
-            }
         };
 
         function saveGlobalData() {
@@ -921,7 +901,7 @@
 
             const userKeys = Object.keys(window.appState.usersPermissions);
             if(userKeys.length === 0) {
-                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay usuarios en esta empresa.</div>`;
+                usersContainer.innerHTML = `<div class="text-center text-xs text-slate-500 py-3 italic bg-slate-950 border border-slate-800 rounded-lg">No hay sucursales o usuarios registrados.</div>`;
             } else {
                 for(let [email, perm] of Object.entries(window.appState.usersPermissions)) {
                     usersContainer.innerHTML += `
@@ -984,10 +964,10 @@
 
             try { await createUserWithEmailAndPassword(auth, email, pass); } catch(err) {}
             window.appState.usersPermissions[email] = { sector, role, password: pass, export: canExport, timers: canTimers };
-            await setDoc(doc(db, "users_directory", email), { email, company: window.activeCompany });
+            await setDoc(doc(db, "users_directory", email), { email, company: window.activeCompany, role });
             saveGlobalData();
             updateSectorsUI();
-            showToast(`Usuario vinculado a ${window.activeCompany.toUpperCase()}`);
+            showToast(`Sucursal / Usuario creado para ${window.activeCompany.toUpperCase()}`);
             document.getElementById('new-user-email').value = '';
             document.getElementById('new-user-pass').value = '';
         };
@@ -1105,7 +1085,7 @@
         };
 
         window.clearChatHistoryAdmin = function() {
-            if(!window.isAdmin) return;
+            if(!window.isCompanyAdmin && !window.isAdmin) return;
             if(confirm("⚠️ ¿Vaciar y borrar TODO el chat de esta empresa? (Se descargará una copia CSV automática antes).")) {
                 window.exportChatHistory();
                 window.appState.chatMessages = [];
@@ -1461,8 +1441,8 @@
                 if (isMySectorMatch) {
                     shouldRingForMe = true;
                 } else if (isForAll) {
-                    if (window.isAdmin && ev.includeAdmin !== false) shouldRingForMe = true; 
-                    else if (!window.isAdmin) shouldRingForMe = true; 
+                    if ((window.isCompanyAdmin || window.isAdmin) && ev.includeAdmin !== false) shouldRingForMe = true; 
+                    else if (!window.isCompanyAdmin && !window.isAdmin) shouldRingForMe = true; 
                 }
 
                 if (ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
@@ -1495,7 +1475,7 @@
             const ev = window.appState.events.find(e => e.id === window.appState.activeAlarmId);
             if(ev) {
                 if(!ev.confirmations) ev.confirmations = {};
-                const userSector = window.isAdmin ? 'Superadmin' : (window.appState.usersPermissions[window.currentUser.email]?.sector || 'Sucursal');
+                const userSector = (window.isCompanyAdmin || window.isAdmin) ? 'Administrador' : (window.appState.usersPermissions[window.currentUser.email]?.sector || 'Sucursal');
                 const timeString = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (' + new Date().toLocaleDateString('es-AR') + ')';
                 
                 ev.confirmations[userSector] = { time: timeString, nickname: nickname };
