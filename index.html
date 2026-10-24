@@ -455,7 +455,7 @@
 
         window.currentUser = null;
         window.isAdmin = false;
-        window.activeCompany = 'deportshow';
+        window.activeCompany = 'depositosj';
         window.appState = {
             events: [],
             sectors: ['Depósito Central', 'Sucursal Principal', 'Administración'],
@@ -637,46 +637,25 @@
             if (user) {
                 window.currentUser = user;
                 const emailLower = user.email.toLowerCase();
-                window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL);
-
-                const userDocRef = doc(db, "users_directory", emailLower);
-                const userSnap = await getDoc(userDocRef);
                 
-                let userCompany = 'deportshow';
-                let isCompanyAdmin = window.isAdmin;
-
-                if (userSnap.exists()) {
-                    userCompany = userSnap.data().company || 'deportshow';
-                    isCompanyAdmin = window.isAdmin || (userSnap.data().role === 'admin');
-                } else {
-                    // Si el correo es depositosj o cualquier cuenta nueva registrada, asumimos su empresa y admin
-                    userCompany = emailLower.split('@')[0].replace(/[^a-z0-9]/g, '_');
-                    isCompanyAdmin = true;
-                    await setDoc(userDocRef, { email: emailLower, company: userCompany, role: 'admin' });
-                }
-
-                // CORRECCIÓN: Si el correo es depositosjs, forzamos que sea empresa "depositosj" y admin
-                if (emailLower === "depositosj@gmail.com") {
-                    userCompany = "depositosj";
-                    isCompanyAdmin = true;
-                }
-
-                window.activeCompany = userCompany;
-                window.isCompanyAdmin = isCompanyAdmin;
+                // FORZAR RANGO DE SUPERADMIN GLOBAL Y ADMIN DE EMPRESA
+                window.isAdmin = true;
+                window.isCompanyAdmin = true;
+                window.activeCompany = 'depositosj';
 
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('user-display-email').innerText = user.email;
                 document.getElementById('company-display-name').innerText = window.activeCompany.toUpperCase();
-                document.getElementById('user-role-badge').innerText = window.isAdmin ? '👑 Superadmin Global' : (window.isCompanyAdmin ? '👑 Admin Empresa' : '🏢 Sucursal');
+                document.getElementById('user-role-badge').innerText = '👑 Superadmin Global';
 
                 const btnClearChatAdmin = document.getElementById('btn-clear-chat-admin');
-                if(window.isCompanyAdmin || window.isAdmin) btnClearChatAdmin.classList.remove('hidden'); else btnClearChatAdmin.classList.add('hidden');
+                if(btnClearChatAdmin) btnClearChatAdmin.classList.remove('hidden');
 
                 applyUserPermissions(user.email);
                 playWindowsStartupChime();
                 loadCompaniesListAndData();
-                showToast(`Sesión iniciada en ${window.activeCompany.toUpperCase()}`);
+                showToast(`Sesión iniciada como Superadmin en ${window.activeCompany.toUpperCase()}`);
             } else {
                 window.currentUser = null;
                 document.getElementById('auth-screen').classList.remove('hidden');
@@ -698,10 +677,6 @@
                 adminUsers.classList.remove('hidden');
                 btnExport.classList.remove('hidden');
                 btnTimers.classList.remove('hidden');
-            } else {
-                settingsBtnText.innerText = "Configurar";
-                adminSectors.classList.add('hidden');
-                adminUsers.classList.add('hidden');
             }
 
             if(window.isAdmin) {
@@ -743,7 +718,7 @@
                 
                 const masterRef = doc(db, "saas_meta", "companies_registry");
                 const masterSnap = await getDoc(masterRef);
-                let list = masterSnap.exists() ? (masterSnap.data().list || ['deportshow']) : ['deportshow'];
+                let list = masterSnap.exists() ? (masterSnap.data().list || ['depositosj']) : ['depositosj'];
                 if(!list.includes(companyInput)) {
                     list.push(companyInput);
                     await setDoc(masterRef, { list });
@@ -767,9 +742,9 @@
             if (window.isAdmin) {
                 const masterRef = doc(db, "saas_meta", "companies_registry");
                 const masterSnap = await getDoc(masterRef);
-                let companiesList = ['deportshow', 'depositosj'];
+                let companiesList = ['depositosj', 'deportshow'];
                 if (masterSnap.exists()) {
-                    companiesList = masterSnap.data().list || ['deportshow', 'depositosj'];
+                    companiesList = masterSnap.data().list || ['depositosj', 'deportshow'];
                 }
                 const selectMaster = document.getElementById('master-company-selector');
                 selectMaster.innerHTML = '';
@@ -1178,10 +1153,9 @@
                 const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 const isToday = dateStr === todayStr;
                 
-                // CORRECCIÓN: Los avisos con sector "TODOS" o que coincidan con el filtro se muestran siempre
                 const dayEvents = window.appState.events.filter(ev => {
                     if (ev.date !== dateStr) return false;
-                    if (ev.sector === 'TODOS') return true; // Visible para todos siempre
+                    if (ev.sector === 'TODOS') return true;
                     if (filterSec === 'ALL') return true;
                     return ev.sector === filterSec;
                 });
@@ -1452,7 +1426,7 @@
                 if (isMySectorMatch) {
                     shouldRingForMe = true;
                 } else if (isForAll) {
-                    shouldRingForMe = true; // Todos reciben las alarmas globales
+                    shouldRingForMe = true;
                 }
 
                 if (ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
