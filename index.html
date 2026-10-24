@@ -639,7 +639,6 @@
                 const emailLower = user.email.toLowerCase();
                 window.isAdmin = (emailLower === MASTER_ADMIN_EMAIL);
 
-                // Buscar o registrar la empresa del usuario
                 const userDocRef = doc(db, "users_directory", emailLower);
                 const userSnap = await getDoc(userDocRef);
                 
@@ -650,10 +649,16 @@
                     userCompany = userSnap.data().company || 'deportshow';
                     isCompanyAdmin = window.isAdmin || (userSnap.data().role === 'admin');
                 } else {
-                    // Si se registró por su cuenta, su correo define su empresa y es Administrador de ella
+                    // Si el correo es depositosj o cualquier cuenta nueva registrada, asumimos su empresa y admin
                     userCompany = emailLower.split('@')[0].replace(/[^a-z0-9]/g, '_');
                     isCompanyAdmin = true;
                     await setDoc(userDocRef, { email: emailLower, company: userCompany, role: 'admin' });
+                }
+
+                // CORRECCIÓN: Si el correo es depositosjs, forzamos que sea empresa "depositosj" y admin
+                if (emailLower === "depositosj@gmail.com") {
+                    userCompany = "depositosj";
+                    isCompanyAdmin = true;
                 }
 
                 window.activeCompany = userCompany;
@@ -736,7 +741,6 @@
                 await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users_directory", email), { email, company: companyInput, role: 'admin' });
                 
-                // Registrar empresa en el registro maestro
                 const masterRef = doc(db, "saas_meta", "companies_registry");
                 const masterSnap = await getDoc(masterRef);
                 let list = masterSnap.exists() ? (masterSnap.data().list || ['deportshow']) : ['deportshow'];
@@ -763,9 +767,9 @@
             if (window.isAdmin) {
                 const masterRef = doc(db, "saas_meta", "companies_registry");
                 const masterSnap = await getDoc(masterRef);
-                let companiesList = ['deportshow'];
+                let companiesList = ['deportshow', 'depositosj'];
                 if (masterSnap.exists()) {
-                    companiesList = masterSnap.data().list || ['deportshow'];
+                    companiesList = masterSnap.data().list || ['deportshow', 'depositosj'];
                 }
                 const selectMaster = document.getElementById('master-company-selector');
                 selectMaster.innerHTML = '';
@@ -779,7 +783,6 @@
         function subscribeToActiveCompanyData() {
             if (unsubscribeActiveCompany) unsubscribeActiveCompany();
 
-            // Deport Show usa "main_workspace", las demás empresas usan su propio documento aislado
             const docPath = window.activeCompany === 'deportshow' ? "main_workspace" : `enterprise_data_${window.activeCompany}`;
             const docRef = doc(db, "enterprise_data", docPath);
 
@@ -1174,7 +1177,15 @@
             for(let day = 1; day <= totalDays; day++) {
                 const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 const isToday = dateStr === todayStr;
-                const dayEvents = window.appState.events.filter(ev => ev.date === dateStr && (filterSec === 'ALL' || ev.sector === filterSec || ev.sector === 'TODOS'));
+                
+                // CORRECCIÓN: Los avisos con sector "TODOS" o que coincidan con el filtro se muestran siempre
+                const dayEvents = window.appState.events.filter(ev => {
+                    if (ev.date !== dateStr) return false;
+                    if (ev.sector === 'TODOS') return true; // Visible para todos siempre
+                    if (filterSec === 'ALL') return true;
+                    return ev.sector === filterSec;
+                });
+
                 const isExpanded = window.appState.expandedDays[dateStr] || false;
 
                 let dotsHtml = '';
@@ -1441,8 +1452,7 @@
                 if (isMySectorMatch) {
                     shouldRingForMe = true;
                 } else if (isForAll) {
-                    if ((window.isCompanyAdmin || window.isAdmin) && ev.includeAdmin !== false) shouldRingForMe = true; 
-                    else if (!window.isCompanyAdmin && !window.isAdmin) shouldRingForMe = true; 
+                    shouldRingForMe = true; // Todos reciben las alarmas globales
                 }
 
                 if (ev.date === dateStr && ev.time === currentHourMin && shouldRingForMe) {
